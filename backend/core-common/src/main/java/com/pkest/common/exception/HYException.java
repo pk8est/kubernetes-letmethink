@@ -5,13 +5,14 @@ package com.pkest.common.exception;
  * QQ: 2731429978
  * Email: pk8est@qq.com
  */
-public class HYClientException extends HYException{
+public class HYException extends Exception{
 
-    public HYClientException() {
-        this("");
+    public HYException() {
+        super();
     }
 
-    public HYClientException(String message) {
+    public HYException(String message) {
         super(message);
     }
+
 }

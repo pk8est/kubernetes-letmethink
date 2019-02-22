@@ -3,6 +3,7 @@ package com.pkest.web.api.controller;
 import com.pkest.common.bean.ResponseBean;
 import com.pkest.common.enums.ResultCode;
 import com.pkest.common.exception.HYClientException;
+import com.pkest.common.exception.HYException;
 import com.pkest.common.exception.HYServerException;
 import com.pkest.common.exception.RecordNotFoundException;
 import com.pkest.repo.model.NamespaceModel;
@@ -32,7 +33,7 @@ public class NamespaceController extends BaseController<NamespaceService> {
     @ResponseBody
     @GetMapping("/{id}")
     @ApiOperation(value="详情")
-    public ResponseBean<NamespaceModel> get(@PathVariable("id") long id) throws HYServerException, HYClientException {
+    public ResponseBean<NamespaceModel> get(@PathVariable("id") long id) throws HYException {
         return ResultCode.SUCCESS.wrap(getService().GeFind(id).orElseThrow(new RecordNotFoundException(id)));
     }
 
