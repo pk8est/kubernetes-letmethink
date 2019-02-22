@@ -3,14 +3,20 @@ package com.pkest.web.service.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.ImmutableMap;
 import com.pkest.common.bean.PageInfo;
+import com.pkest.common.exception.HYException;
+import com.pkest.common.exception.RecordNotFoundException;
 import com.pkest.lib.myibatis.CompareBuilder;
 import com.pkest.repo.mapper.BaseMapper;
 import com.pkest.repo.model.BaseModel;
+import com.pkest.repo.model.NamespaceModel;
 import com.pkest.util.HYPropertyUtils;
+import com.pkest.util.HYStringUtils;
 import com.pkest.web.service.service.BaseService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +28,7 @@ import java.util.Optional;
  */
 public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implements BaseService<T, K> {
 
-    final static String DELETE_FIELD_KEY = "delete_status";
+    final static String DELETE_FIELD_KEY = "deleteStatus";
     final static String DELETEAT_FIELD_KEY = "deletedAt";
     final static String ID_KEY = "id";
 
@@ -33,9 +39,29 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
         this.mapper = mapper;
     }
 
+    public Class<T> getModelClass(){
+        Class<T> tClass = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        return tClass;
+    }
+
     @Override
     public K getMapper(){
         return mapper;
+    }
+
+    @Override
+    public T get(long id){
+        return GeFind(id).orElse(null);
+    }
+
+    @Override
+    public T getOrNew(long id){
+        return GeFind(id).orElse(BeanUtils.instantiate(getModelClass()));
+    }
+
+    @Override
+    public T getOrFail(long id) throws HYException{
+        return GeFind(id).orElseThrow(new RecordNotFoundException(id));
     }
 
     @Override
@@ -55,7 +81,7 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
 
     @Override
     public Optional<T> GeFind(CompareBuilder compareBuilder, boolean filterDeleteStatus){
-        if(filterDeleteStatus) compareBuilder.filter(DELETE_FIELD_KEY, 0);
+        if(filterDeleteStatus) compareBuilder.filter(HYStringUtils.toUnderline(DELETE_FIELD_KEY), 0);
         return Optional.ofNullable((T)getMapper().findOne(compareBuilder));
     }
 
@@ -66,7 +92,7 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
 
     @Override
     public List<T> GeFindAll(CompareBuilder compareBuilder, boolean filterDeleteStatus){
-        if(filterDeleteStatus) compareBuilder.filter(DELETE_FIELD_KEY, 0);
+        if(filterDeleteStatus) compareBuilder.filter(HYStringUtils.toUnderline(DELETE_FIELD_KEY), 0);
         return getMapper().findAll(compareBuilder);
     }
 
@@ -82,7 +108,7 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
 
     @Override
     public PageInfo<T> GePagination(CompareBuilder compareBuilder, Pageable pageable, boolean filterDeleteStatus){
-        if(filterDeleteStatus) compareBuilder.filter(DELETE_FIELD_KEY, 0);
+        if(filterDeleteStatus) compareBuilder.filter(HYStringUtils.toUnderline(DELETE_FIELD_KEY), 0);
         PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize(), true);
         return new PageInfo(getMapper().findAll(compareBuilder));
     }
@@ -90,26 +116,26 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
     @Override
     public Long GeCreate(BaseModel model){
         getMapper().insert(model);
-        return model.getId();
+        return model.id();
     }
 
     @Override
-    public Long GeUpdate(Long id, BaseModel model){
-        model.setId(id);
+    public Long GeUpdate(BaseModel model){
         return (Long) getMapper().update(model);
     }
 
     @Override
     public Long GeSave(BaseModel model) {
-        if(model.getId() == null){
+        Long id = model.id();
+        if(id == null){
             GeCreate(model);
         }else{
-            GeUpdate(model.getId(), model);
+            GeUpdate(model);
         }
-        return model.getId();
+        return id;
     }
 
-        @Override
+    @Override
     public Long GeDelete(Long id){
         return GeDelete(id, true);
     }
@@ -117,7 +143,7 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
     @Override
     public Long GeDelete(Long id, boolean virtual){
         if(virtual){
-            return (Long)getMapper().updateOne(ImmutableMap.of(ID_KEY, id, DELETE_FIELD_KEY, 1, DELETEAT_FIELD_KEY, new Date()));
+            return (Long)getMapper().updateOne(ImmutableMap.of(ID_KEY, id, HYStringUtils.toCamel(DELETE_FIELD_KEY),1, DELETEAT_FIELD_KEY, new Date()));
         }else{
             return (Long)getMapper().delete(id);
         }
@@ -137,11 +163,10 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
     public boolean GeUnique(Object model, String id, String[] fields, boolean filterDeleteStatus){
         CompareBuilder builder = new CompareBuilder();
         for (String field: fields){
-            builder.filter(field, HYPropertyUtils.getProperty(model, field, ""));
+            builder.filter(HYStringUtils.toUnderline(field), HYPropertyUtils.getProperty(model, HYStringUtils.toCamel(field), ""));
         }
-        if(filterDeleteStatus) builder.filter(DELETE_FIELD_KEY, 0);
         builder.compare(id, CompareBuilder.OperatorEnum.NEQ, HYPropertyUtils.getProperty(model, id, 0));
-        return GeFind(builder) == null ? true : false;
+        return GeFind(builder, filterDeleteStatus).orElse(null) == null ? true : false;
     }
 
 }

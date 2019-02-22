@@ -1,9 +1,12 @@
 package com.pkest.repo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pkest.lib.myibatis.annotation.HYTable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 /**
  * Created by wuzhonggui on 2019/1/21.
@@ -16,12 +19,24 @@ import lombok.NoArgsConstructor;
 @HYTable("lmt_namespace")
 public class NamespaceModel extends BaseModel {
 
-    private String name ;
-    private String alias;
-    private String yaml ;
+    protected Long id;
+    protected Long creatorUid;
+    protected Date createdAt;
+    protected Date updatedAt;
+    protected String description;
 
-    private String type ;
-    private String status ;
+    @JsonIgnore
+    protected Integer deleteStatus;
+
+    @JsonIgnore
+    protected Date deletedAt;
+
+    private Long clusterId;
+    private String name;
+    private String alias;
+    private String yaml;
+    private String type;
+    private String status;
 
 }
 

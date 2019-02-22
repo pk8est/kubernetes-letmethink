@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS `lmt_namespace`;
 CREATE TABLE `lmt_namespace` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `cluster_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '集群ID',
   `name` varchar(100) NOT NULL DEFAULT "" COMMENT '所属业务',
   `alias` varchar(255)  NOT NULL DEFAULT '' COMMENT '应用别名',
   `yaml` text COMMENT 'yaml/json',

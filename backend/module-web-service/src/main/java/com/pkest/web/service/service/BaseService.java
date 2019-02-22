@@ -1,6 +1,7 @@
 package com.pkest.web.service.service;
 
 import com.pkest.common.bean.PageInfo;
+import com.pkest.common.exception.HYException;
 import com.pkest.lib.myibatis.CompareBuilder;
 import com.pkest.repo.mapper.BaseMapper;
 import com.pkest.repo.model.BaseModel;
@@ -17,6 +18,12 @@ import java.util.Optional;
 public interface BaseService<T extends BaseModel, K extends BaseMapper>{
 
     K getMapper();
+
+    T get(long id);
+
+    T getOrNew(long id);
+
+    T getOrFail(long id) throws HYException;
 
     Optional<T> GeFind(Long id);
 
@@ -38,7 +45,7 @@ public interface BaseService<T extends BaseModel, K extends BaseMapper>{
 
     Long GeCreate(BaseModel model);
 
-    Long GeUpdate(Long id, BaseModel model);
+    Long GeUpdate(BaseModel model);
 
     Long GeSave(BaseModel model);
 

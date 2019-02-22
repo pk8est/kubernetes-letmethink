@@ -1,6 +1,7 @@
 package com.pkest.repo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pkest.util.HYPropertyUtils;
 import lombok.Data;
 
 import java.util.Date;
@@ -12,16 +13,13 @@ import java.util.Date;
  */
 @Data
 public class BaseModel {
-    protected Long id ;
-    protected Long creatorUid;
-    protected Date createdAt;
-    protected Date updatedAt;
-    protected String description;
 
-    @JsonIgnore
-    protected Integer deleteStatus;
+    public String pk(){
+        return "id";
+    }
 
-    @JsonIgnore
-    protected Date deletedAt;
+    public Long id(){
+        return HYPropertyUtils.getProperty(this, pk(), 0L);
+    }
 
 }
