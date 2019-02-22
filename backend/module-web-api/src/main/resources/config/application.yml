@@ -1,0 +1,19 @@
+server:
+  port: 8222
+spring:
+  application:
+    name: kubernetes-letmethink-web-api
+  profiles:
+    active: ${profiles.active:dev}
+
+logging:
+  level:
+    com.pkest: DEBUG
+  pattern:
+    console: ${logging.pattern.file}
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{requestId}] ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39} : %m%n"
+
+
+
+
+

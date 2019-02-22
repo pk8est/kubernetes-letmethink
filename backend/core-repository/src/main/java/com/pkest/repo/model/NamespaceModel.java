@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 /**
  * Created by wuzhonggui on 2019/1/21.
  * QQ: 2731429978
@@ -15,18 +13,17 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@HYTable("system_user")
-public class User extends Base {
-    private Long id ;
+@HYTable("lmt_namespace")
+public class NamespaceModel extends BaseModel {
+
     private String name ;
-    private Long uid ;
-    private String udb ;
-    private Integer status ;
-    private Integer vip ;
-    private Long creatorUid;
-    private Date createdAt;
-    private Date updatedAt;
-    private Date deletedAt;
+    private String alias;
+    private String yaml ;
+
+    private String type ;
+    private String status ;
 
 }
+
+
 

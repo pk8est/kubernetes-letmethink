@@ -1,6 +1,6 @@
 package com.pkest.repo.mapper;
 
-import com.pkest.repo.model.User;
+import com.pkest.repo.model.NamespaceModel;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
  * Email: pk8est@qq.com
  */
 @Repository
-public interface UserMapper extends BaseMapper<User, Long> {
+public interface NamespaceMapper extends BaseMapper<NamespaceModel, Long> {
 
 }
