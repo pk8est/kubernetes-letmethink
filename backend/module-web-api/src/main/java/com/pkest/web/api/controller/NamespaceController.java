@@ -61,7 +61,7 @@ public class NamespaceController extends BaseController<NamespaceService> {
     @ApiOperation(value="创建")
     public ResponseBean<NamespaceModel> create(
             @RequestBody @Validated({Insert.class, Save.class}) NamespaceBody body) throws HYException, K8sDriverException {
-        return ResultCode.SUCCESS.wrap(getService().create(body.toDto(NamespaceModel.class), body.getWarp()));
+        return ResultCode.SUCCESS.wrap(getService().create(body.toDto(NamespaceModel.class), body.getYaml()));
     }
 
     @ResponseBody
@@ -70,7 +70,7 @@ public class NamespaceController extends BaseController<NamespaceService> {
     public ResponseBean<NamespaceModel> update(@PathVariable("id") long id,
                                      @RequestBody @Validated({Update.class, Save.class}) NamespaceBody body)
             throws HYException, K8sDriverException {
-        return ResultCode.SUCCESS.wrap(getService().update(id, body.toDto(NamespaceModel.class), body.getWarp()));
+        return ResultCode.SUCCESS.wrap(getService().update(id, body.toDto(NamespaceModel.class), body.getYaml()));
     }
 
     @ResponseBody

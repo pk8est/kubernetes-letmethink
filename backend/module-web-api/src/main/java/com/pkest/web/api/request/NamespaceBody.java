@@ -28,12 +28,11 @@ public class NamespaceBody extends BaseBody{
     private Long clusterId;
 
     private String alias;
-    private String yaml;
     private String type;
     private String status;
     private String description;
 
-    private NamespaceWarp warp;
+    private NamespaceWarp yaml;
 
 }
 

@@ -25,13 +25,13 @@ import java.util.Optional;
 public class K8sNamespaceServiceImpl extends K8sBaseServiceImpl implements K8sNamespaceService {
 
     @Override
-    public Namespace create(NamespaceModel model, NamespaceWarp warp) throws HYException, K8sDriverException{
-        return getKubeClient(model.getClusterId()).createNamespace(build(model, warp));
+    public Namespace create(NamespaceModel model, Namespace namespace) throws HYException, K8sDriverException{
+        return getKubeClient(model.getClusterId()).createNamespace(namespace);
     }
 
     @Override
-    public Namespace update(NamespaceModel model, NamespaceWarp warp) throws HYException, K8sDriverException{
-        return getKubeClient(model.getClusterId()).replaceNamespace(build(model, warp));
+    public Namespace update(NamespaceModel model, Namespace namespace) throws HYException, K8sDriverException{
+        return getKubeClient(model.getClusterId()).replaceNamespace(namespace);
     }
 
     @Override
@@ -39,6 +39,7 @@ public class K8sNamespaceServiceImpl extends K8sBaseServiceImpl implements K8sNa
         return getKubeClient(model.getClusterId()).deleteNamespace(model.getName());
     }
 
+    @Override
     public Namespace build(NamespaceModel model, NamespaceWarp warp){
          return new NamespaceBuilder()
                  .withNewMetadata()

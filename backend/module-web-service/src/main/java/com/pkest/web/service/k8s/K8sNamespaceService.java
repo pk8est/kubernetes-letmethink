@@ -12,9 +12,11 @@ import io.fabric8.kubernetes.api.model.Namespace;
  */
 public interface K8sNamespaceService extends K8sBaseService{
 
-    Namespace create(NamespaceModel model, NamespaceWarp warp) throws HYException, K8sDriverException;
+    Namespace create(NamespaceModel model, Namespace namespace) throws HYException, K8sDriverException;
 
-    Namespace update(NamespaceModel model, NamespaceWarp warp) throws HYException, K8sDriverException;
+    Namespace update(NamespaceModel model, Namespace namespace) throws HYException, K8sDriverException;
 
     boolean delete(NamespaceModel model) throws HYException, K8sDriverException;
+
+    Namespace build(NamespaceModel model, NamespaceWarp warp);
 }
