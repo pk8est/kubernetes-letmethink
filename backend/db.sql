@@ -1,3 +1,24 @@
+DROP TABLE IF EXISTS `lmt_cluster`;
+CREATE TABLE `lmt_cluster` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL DEFAULT "" COMMENT '',
+  `cluster_master_url` varchar(100) NOT NULL DEFAULT "" COMMENT '',
+  `cluster_username` varchar(100) NOT NULL DEFAULT "" COMMENT '',
+  `cluster_cert_data` text COMMENT '',
+  `cluster_cert_key` text COMMENT '',
+  `type` varchar(50) NOT NULL DEFAULT '' COMMENT '类型',
+  `status` varchar(50) NOT NULL DEFAULT 1 COMMENT '',
+  `delete_status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '',
+  `creator_uid` bigint(20) NOT NULL DEFAULT 0 COMMENT '创建人',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `description` text COMMENT '备注',
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB;
+
+
 DROP TABLE IF EXISTS `lmt_namespace`;
 CREATE TABLE `lmt_namespace` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,

@@ -40,8 +40,7 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
     }
 
     public Class<T> getModelClass(){
-        Class<T> tClass = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        return tClass;
+        return (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
     @Override

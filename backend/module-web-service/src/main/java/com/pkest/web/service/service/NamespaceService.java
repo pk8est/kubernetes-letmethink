@@ -1,8 +1,10 @@
 package com.pkest.web.service.service;
 
 import com.pkest.common.exception.HYException;
+import com.pkest.lib.kubernetes.exception.K8sDriverException;
 import com.pkest.repo.mapper.NamespaceMapper;
 import com.pkest.repo.model.NamespaceModel;
+import com.pkest.web.service.warp.NamespaceWarp;
 
 import javax.annotation.Nonnull;
 
@@ -13,7 +15,7 @@ import javax.annotation.Nonnull;
  */
 public interface NamespaceService extends BaseService<NamespaceModel, NamespaceMapper>{
 
-    NamespaceModel create(NamespaceModel model) throws HYException;
+    NamespaceModel create(NamespaceModel model, NamespaceWarp warp) throws HYException, K8sDriverException;
 
     NamespaceModel update(long id, NamespaceModel model) throws HYException;
 
