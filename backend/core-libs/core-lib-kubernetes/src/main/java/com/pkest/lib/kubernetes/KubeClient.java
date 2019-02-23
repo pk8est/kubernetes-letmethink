@@ -250,6 +250,9 @@ public interface KubeClient<T> {
     Namespace createNamespace(Namespace namespace)
             throws K8sDriverException;
 
+    Namespace replaceNamespace(Namespace namespace)
+            throws K8sDriverException;
+
     boolean deleteNamespace(String namespaceName)
             throws K8sDriverException;
 

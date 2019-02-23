@@ -17,7 +17,9 @@ public interface NamespaceService extends BaseService<NamespaceModel, NamespaceM
 
     NamespaceModel create(NamespaceModel model, NamespaceWarp warp) throws HYException, K8sDriverException;
 
-    NamespaceModel update(long id, NamespaceModel model) throws HYException;
+    NamespaceModel update(long id, NamespaceModel model, NamespaceWarp warp) throws HYException, K8sDriverException;
 
     void isUnique(@Nonnull NamespaceModel model) throws HYException;
+
+    boolean delete(long id) throws HYException, K8sDriverException;
 }

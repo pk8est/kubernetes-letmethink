@@ -89,8 +89,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             client = new DefaultKubernetesClient(HttpClientUtils.createHttpClient(config), config);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new K8sDriverException("instantialize kubernetes client error, " + e.getMessage());
+            throw new K8sDriverException("instantialize kubernetes client error, " + e);
         }
         return new KubeClientImpl(client);
     }
@@ -109,7 +108,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.nodes().withLabels(labelSelector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -119,7 +118,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.nodes().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -129,7 +128,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.nodes().withName(nodeName).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -141,7 +140,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
             node.getMetadata().getLabels().putAll(labels);
             return client.nodes().withName(nodeName).replace(node);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -166,7 +165,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.nodes().withName(nodeName).replace(node);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -179,7 +178,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
             node.getMetadata().getLabels().putAll(annotations);
             return client.nodes().withName(nodeName).replace(node);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -194,7 +193,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
             }
             return client.nodes().withName(nodeName).replace(node);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -213,7 +212,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.pods().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -232,7 +231,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.pods().inAnyNamespace().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -243,7 +242,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.pods().inAnyNamespace().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -254,7 +253,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.pods().create(pod);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -268,7 +267,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.pods().withName(name).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -282,7 +281,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.pods().withName(name).replace(pod);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -296,7 +295,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             client.pods().withName(name).delete();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
         return true;
     }
@@ -311,7 +310,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.pods().withName(name).patch(pod);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -322,7 +321,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.replicationControllers().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -340,7 +339,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.replicationControllers().inAnyNamespace().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -360,7 +359,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.replicationControllers().create(rc);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
 
     }
@@ -375,7 +374,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.replicationControllers().withName(name).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -390,7 +389,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.replicationControllers().withName(name).replace(rc);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -404,7 +403,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.replicationControllers().withName(name).scale(replicas);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -443,7 +442,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.replicationControllers().withName(name).cascading(false).patch(rc);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -453,7 +452,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.apps().deployments().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -472,7 +471,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
                 return client.apps().deployments().inNamespace(namespace).withLabels(selector).list();
             }
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -486,7 +485,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
                 return client.apps().deployments().inAnyNamespace().withLabels(selector).list();
             }
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -509,7 +508,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.apps().deployments().create(deployment);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -522,7 +521,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.apps().deployments().withName(name).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -535,7 +534,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.apps().deployments().inNamespace(deployment.getMetadata().getNamespace()).withName(name).replace(deployment);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -565,7 +564,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.apps().deployments().withName(deploymentName).patch(deployment);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -578,7 +577,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.apps().deployments().withName(name).scale(replicas);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -622,7 +621,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.apps().daemonSets().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -637,7 +636,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.apps().daemonSets().inAnyNamespace().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -655,7 +654,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.apps().daemonSets().create(daemonSet);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -668,7 +667,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.apps().daemonSets().withName(name).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -681,7 +680,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.apps().daemonSets().withName(name).replace(daemonSet);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -711,7 +710,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.apps().daemonSets().withName(daemonSetName).patch(daemonSet);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -721,7 +720,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.persistentVolumes().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -739,7 +738,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.persistentVolumes().create(persistentVolume);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException("create pv error, message is " + e.getMessage());
+            throw new K8sDriverException("create pv error, message is " + e);
         }
     }
 
@@ -752,7 +751,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.persistentVolumeClaims().create(persistentVolumeClaim);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException("create pvc error, message is " + e.getMessage());
+            throw new K8sDriverException("create pvc error, message is " + e);
         }
     }
 
@@ -761,7 +760,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.persistentVolumeClaims().withName(name).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException("get pvc info error, message is " + e.getMessage());
+            throw new K8sDriverException("get pvc info error, message is " + e);
         }
     }
 
@@ -770,7 +769,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             client.persistentVolumeClaims().withName(name).delete();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException("delete pvc " + name + "error, message is " + e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -779,7 +778,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             client.endpoints().withName(name).delete();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException("delete endpoints " + name + "error, message is " + e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -788,7 +787,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.configMaps().withName(name).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException("get configmap " + "error, message is " + e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -797,7 +796,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.configMaps().createOrReplace(configMap);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException("create configmap " + "error, message is " + e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -806,7 +805,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             client.configMaps().withLabels(labels).delete();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException("delete configmap " + "error, message is " + e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -815,7 +814,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             client.configMaps().withName(configMap.getMetadata().getName()).patch(configMap);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException("patch configmap " + "error, message is " + e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -828,7 +827,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.persistentVolumes().withName(name).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException("get pv info error, message is " + e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -841,7 +840,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.persistentVolumes().withName(name).replace(persistentVolume);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -859,7 +858,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.persistentVolumes().withName(persistentVolumeName).patch(persistentVolume);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -870,7 +869,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.batch().jobs().inAnyNamespace().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -881,7 +880,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.batch().jobs().inAnyNamespace().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -892,7 +891,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.batch().jobs().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -903,7 +902,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.batch().jobs().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -913,12 +912,12 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         if (job == null) {
             return null;
         }
-         logger.debug("create job with job=\n{}", job);
+        logger.debug("create job with job=\n{}", job);
         try {
             job.setApiVersion(K8S_JOB_VERSION);
             return client.batch().jobs().create(job);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -932,7 +931,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.batch().jobs().withName(jobName).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -953,7 +952,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
             job.setApiVersion(K8S_JOB_VERSION);
             return client.batch().jobs().withName(jobName).replace(job);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -967,7 +966,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.batch().jobs().withName(jobName).delete();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -976,7 +975,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.batch().jobs().withLabels(selector).delete();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -991,7 +990,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
             job.setApiVersion(K8S_JOB_VERSION);
             return client.batch().jobs().withName(jobName).patch(job);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1002,7 +1001,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
             return client.pods().withName(podName)
                     .inContainer(containerName).watchLog();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1013,7 +1012,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.namespaces().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1024,7 +1023,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.namespaces().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1038,7 +1037,21 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.namespaces().createOrReplace(namespace);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
+        }
+    }
+
+    @Override
+    public Namespace replaceNamespace(Namespace namespace)
+            throws K8sDriverException {
+        logger.debug("replace namespace=" + namespace);
+        if (namespace == null) {
+            return null;
+        }
+        try {
+            return client.namespaces().withName(namespace.getMetadata().getName()).replace(namespace);
+        } catch (KubernetesClientException e) {
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1052,7 +1065,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.namespaces().withName(namespaceName).delete();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1064,7 +1077,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.services().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1080,7 +1093,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.services().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1094,7 +1107,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.services().create(service);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1108,7 +1121,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.services().withName(serviceName).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
     @Override
@@ -1121,7 +1134,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.services().inNamespace(namespace).withName(serviceName).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1135,7 +1148,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.services().withName(serviceName).replace(service);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1149,7 +1162,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.services().withName(serviceName).delete();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1163,7 +1176,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.services().withName(serviceName).patch(service);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1175,7 +1188,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.services().inAnyNamespace().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1186,7 +1199,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.services().inAnyNamespace().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1199,7 +1212,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.events().inAnyNamespace().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1210,7 +1223,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.events().inAnyNamespace().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1221,7 +1234,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.events().inNamespace(namespace).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1232,7 +1245,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.events().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1243,7 +1256,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.events().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1256,7 +1269,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.endpoints().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1267,7 +1280,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.endpoints().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1278,7 +1291,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.endpoints().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1289,7 +1302,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.endpoints().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1300,7 +1313,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.endpoints().withName(endpointName).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1311,7 +1324,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.secrets().withName(name).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1326,7 +1339,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.secrets().createOrReplace(secret);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1340,7 +1353,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.secrets().withName(secret.getMetadata().getName()).patch(secret);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1354,7 +1367,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.secrets().withName(name).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1368,7 +1381,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.secrets().withName(name).delete();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1395,7 +1408,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
                     throw new K8sDriverException("create endpoints failed, nothing return from k8s");
                 }
             } catch (KubernetesClientException e) {
-                throw new K8sDriverException(e.getMessage());
+                throw new K8sDriverException(e);
             }
 
         }
@@ -1409,7 +1422,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
                 throw new K8sDriverException("create secret failed, nothing return from k8s");
             }
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1476,7 +1489,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.extensions().ingresses().inAnyNamespace().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1486,7 +1499,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.extensions().ingresses().inAnyNamespace().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1496,7 +1509,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.extensions().ingresses().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1506,7 +1519,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.extensions().ingresses().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1519,7 +1532,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.extensions().ingresses().create(ingress);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1532,7 +1545,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.extensions().ingresses().withName(ingressName).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1545,7 +1558,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.extensions().ingresses().withName(ingressName).replace(ingress);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1558,7 +1571,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.extensions().ingresses().withName(ingressName).delete();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1567,7 +1580,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.extensions().ingresses().withLabels(selector).delete();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1580,7 +1593,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.extensions().ingresses().inNamespace(ingress.getMetadata().getNamespace()).withName(ingressName).patch(ingress);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1591,7 +1604,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.namespaces().list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1602,7 +1615,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return client.namespaces().withLabels(selector).list();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1640,7 +1653,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
                 return functions().inAnyNamespace().withLabels(selector).list();
             }
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1669,13 +1682,13 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
                 return functions().inNamespace(namespace).withLabels(selector).list();
             }
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
     @Override
     public Function getFunction(String namespace, String deployName) throws K8sDriverException {
-            return functions().inNamespace(namespace).withName(deployName).get();
+        return functions().inNamespace(namespace).withName(deployName).get();
     }
 
     @Override
@@ -1687,7 +1700,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return functions().withName(name).get();
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1700,7 +1713,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return functions().create(function);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1713,7 +1726,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return functions().inNamespace(function.getMetadata().getNamespace()).withName(name).patch(function);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 
@@ -1726,7 +1739,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         try {
             return functions().withName(name).patch(function);
         } catch (KubernetesClientException e) {
-            throw new K8sDriverException(e.getMessage());
+            throw new K8sDriverException(e);
         }
     }
 

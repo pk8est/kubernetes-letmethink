@@ -69,16 +69,15 @@ public class NamespaceController extends BaseController<NamespaceService> {
     @ApiOperation(value="更新接口")
     public ResponseBean<NamespaceModel> update(@PathVariable("id") long id,
                                      @RequestBody @Validated({Update.class, Save.class}) NamespaceBody body)
-            throws HYException{
-        return ResultCode.SUCCESS.wrap(getService().update(id, body.toDto(NamespaceModel.class)));
+            throws HYException, K8sDriverException {
+        return ResultCode.SUCCESS.wrap(getService().update(id, body.toDto(NamespaceModel.class), body.getWarp()));
     }
 
     @ResponseBody
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value="删除")
-    public ResponseBean delete(@PathVariable("id") long id) throws HYException {
-        getService().getOrFail(id);
-        if(getService().GeDelete(id) == 1){
+    public ResponseBean delete(@PathVariable("id") long id) throws HYException, K8sDriverException{
+        if(getService().delete(id)){
             return ResultCode.SUCCESS.message("删除成功!");
         }else{
             return ResultCode.FAILURE.message("删除失败!");

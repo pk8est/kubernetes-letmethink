@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Resource;
+import javax.xml.stream.events.Namespace;
 
 /**
  * Created by wuzhonggui on 2019/2/22.
@@ -41,11 +42,12 @@ public class NamespaceServiceImpl extends BaseServiceImpl<NamespaceModel, Namesp
 
     @Override
     @Transactional(rollbackFor=Throwable.class)
-    public NamespaceModel update(long id, NamespaceModel model) throws HYException{
+    public NamespaceModel update(long id, NamespaceModel model, NamespaceWarp warp) throws HYException, K8sDriverException {
         model.setId(id);
         isUnique(model);
         getOrFail(id);
         GeUpdate(model);
+        k8sNamespaceService.update(model, warp);
         return getOrFail(model.getId());
     }
 
@@ -54,6 +56,13 @@ public class NamespaceServiceImpl extends BaseServiceImpl<NamespaceModel, Namesp
         if(!GeUnique(model, new String[]{"clusterId", "name"})){
             throw new HYKnownException(ResultCode.SERVER_ERROR.message("[" + model.getName() + "]已经存在!"));
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor=Throwable.class)
+    public boolean delete(long id) throws HYException, K8sDriverException{
+        NamespaceModel model = getOrFail(id);
+        return GeDelete(id) == 1 &&  k8sNamespaceService.delete(model);
     }
 
 }
