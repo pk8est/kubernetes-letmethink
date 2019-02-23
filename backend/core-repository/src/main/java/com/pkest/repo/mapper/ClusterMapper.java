@@ -1,7 +1,6 @@
 package com.pkest.repo.mapper;
 
 import com.pkest.repo.model.ClusterModel;
-import com.pkest.repo.model.NamespaceModel;
 import org.springframework.stereotype.Repository;
 
 /**

@@ -2,7 +2,6 @@ package com.pkest.web.api.request;
 
 import com.pkest.common.interfaces.Insert;
 import com.pkest.common.interfaces.Update;
-import com.pkest.web.service.warp.NamespaceWarp;
 import lombok.Data;
 
 import javax.validation.constraints.Min;

@@ -1,16 +1,13 @@
 package com.pkest.web.api.request;
 
 import com.pkest.common.interfaces.Insert;
-import com.pkest.common.interfaces.Save;
 import com.pkest.common.interfaces.Update;
 import com.pkest.web.service.warp.NamespaceWarp;
 import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import javax.validation.constraints.Size;
 
 /**
  * @author 360733598@qq.com

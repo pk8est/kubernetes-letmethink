@@ -1,13 +1,9 @@
 package com.pkest.web.api.request;
 
-import com.pkest.common.interfaces.Insert;
 import com.pkest.common.interfaces.Save;
-import com.pkest.common.interfaces.Update;
 import lombok.Data;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 
 /**
  * @author 360733598@qq.com

@@ -7,7 +7,6 @@ import com.pkest.lib.kubernetes.exception.K8sDriverException;
 import com.pkest.repo.model.ClusterModel;
 import com.pkest.web.service.k8s.K8sBaseService;
 import com.pkest.web.service.service.ClusterService;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;

@@ -7,7 +7,6 @@ import com.pkest.common.enums.ResultCode;
 import com.pkest.common.exception.HYClientException;
 import com.pkest.common.exception.HYKnownException;
 import com.pkest.common.exception.HYServerException;
-import com.pkest.common.exception.RecordNotFoundException;
 import com.pkest.lib.kubernetes.exception.K8sDriverException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

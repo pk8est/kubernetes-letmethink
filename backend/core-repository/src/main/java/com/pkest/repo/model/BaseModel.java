@@ -1,10 +1,7 @@
 package com.pkest.repo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pkest.util.HYPropertyUtils;
 import lombok.Data;
-
-import java.util.Date;
 
 /**
  * Created by wuzhonggui on 2019/1/21.

@@ -7,14 +7,10 @@ import com.pkest.repo.model.ConfigmapModel;
 import com.pkest.repo.model.NamespaceModel;
 import com.pkest.util.HYPropertyUtils;
 import com.pkest.web.service.k8s.K8sConfigmapService;
-import com.pkest.web.service.k8s.K8sNamespaceService;
 import com.pkest.web.service.service.NamespaceService;
 import com.pkest.web.service.warp.ConfigmapWarp;
-import com.pkest.web.service.warp.NamespaceWarp;
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
-import io.fabric8.kubernetes.api.model.Namespace;
-import io.fabric8.kubernetes.api.model.NamespaceBuilder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

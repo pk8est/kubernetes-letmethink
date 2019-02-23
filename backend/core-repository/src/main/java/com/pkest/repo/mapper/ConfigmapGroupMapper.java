@@ -1,7 +1,6 @@
 package com.pkest.repo.mapper;
 
 import com.pkest.repo.model.ConfigmapGroupModel;
-import com.pkest.repo.model.ConfigmapSetModel;
 import org.springframework.stereotype.Repository;
 
 /**
