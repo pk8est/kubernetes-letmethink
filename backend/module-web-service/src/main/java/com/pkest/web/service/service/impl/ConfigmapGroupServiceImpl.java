@@ -3,8 +3,10 @@ package com.pkest.web.service.service.impl;
 import com.pkest.common.enums.ResultCode;
 import com.pkest.common.exception.HYException;
 import com.pkest.common.exception.HYKnownException;
+import com.pkest.common.exception.RecordNotFoundException;
 import com.pkest.repo.mapper.ConfigmapGroupMapper;
 import com.pkest.repo.mapper.ConfigmapSetMapper;
+import com.pkest.repo.model.ClusterModel;
 import com.pkest.repo.model.ConfigmapGroupModel;
 import com.pkest.repo.model.ConfigmapSetModel;
 import com.pkest.web.service.service.ConfigmapGroupService;
@@ -24,6 +26,10 @@ import javax.annotation.Nonnull;
 @Service
 public class ConfigmapGroupServiceImpl extends BaseServiceImpl<ConfigmapGroupModel, ConfigmapGroupMapper> implements ConfigmapGroupService {
 
+    @Override
+    public ConfigmapGroupModel getOrFail(long id) throws HYException{
+        return GeFind(id).orElseThrow(new RecordNotFoundException("配置分组["+id+"]不存在!"));
+    }
 
     @Override
     @Transactional(rollbackFor=Throwable.class)

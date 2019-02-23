@@ -2,9 +2,6 @@ package com.pkest.util;
 
 import org.springframework.beans.BeanUtils;
 
-import javax.swing.text.html.Option;
-import java.util.Collection;
-
 /**
  * Created by wuzhonggui on 2019/1/22.
  * QQ: 2731429978

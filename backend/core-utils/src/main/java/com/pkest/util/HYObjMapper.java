@@ -1,15 +1,9 @@
 package com.pkest.util;
 
-import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.xml.internal.ws.developer.SerializationFeature;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.Assert;
-
-import java.util.Collection;
 
 /**
  * Created by wuzhonggui on 2018/8/28.

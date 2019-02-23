@@ -3,9 +3,11 @@ package com.pkest.web.service.service.impl;
 import com.pkest.common.enums.ResultCode;
 import com.pkest.common.exception.HYException;
 import com.pkest.common.exception.HYKnownException;
+import com.pkest.common.exception.RecordNotFoundException;
 import com.pkest.lib.kubernetes.exception.K8sDriverException;
 import com.pkest.repo.mapper.ConfigmapMapper;
 import com.pkest.repo.mapper.NamespaceMapper;
+import com.pkest.repo.model.ClusterModel;
 import com.pkest.repo.model.ConfigmapModel;
 import com.pkest.repo.model.NamespaceModel;
 import com.pkest.util.HYObjMapper;
@@ -35,6 +37,11 @@ public class ConfigmapServiceImpl extends BaseServiceImpl<ConfigmapModel, Config
 
     @Resource
     private K8sConfigmapService k8sConfigmapService;
+
+    @Override
+    public ConfigmapModel getOrFail(long id) throws HYException{
+        return GeFind(id).orElseThrow(new RecordNotFoundException("配置["+id+"]不存在!"));
+    }
 
     @Override
     @Transactional(rollbackFor=Throwable.class)

@@ -8,7 +8,6 @@ import com.pkest.common.exception.RecordNotFoundException;
 import com.pkest.lib.myibatis.CompareBuilder;
 import com.pkest.repo.mapper.BaseMapper;
 import com.pkest.repo.model.BaseModel;
-import com.pkest.repo.model.NamespaceModel;
 import com.pkest.util.HYPropertyUtils;
 import com.pkest.util.HYStringUtils;
 import com.pkest.web.service.service.BaseService;
@@ -60,7 +59,9 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
 
     @Override
     public T getOrFail(long id) throws HYException{
-        return GeFind(id).orElseThrow(new RecordNotFoundException(id));
+        return GeFind(id).orElseThrow(new RecordNotFoundException(
+                String.format("%s: id is %s model not fount!", getModelClass().getName(), id)
+        ));
     }
 
     @Override

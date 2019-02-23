@@ -33,6 +33,11 @@ public class NamespaceServiceImpl extends BaseServiceImpl<NamespaceModel, Namesp
     private K8sNamespaceService k8sNamespaceService;
 
     @Override
+    public NamespaceModel getOrFail(long id) throws HYException{
+        return GeFind(id).orElseThrow(new RecordNotFoundException("命名空间["+id+"]不存在!"));
+    }
+
+    @Override
     @Transactional(rollbackFor=Throwable.class)
     public NamespaceModel create(NamespaceModel model, NamespaceWarp warp) throws HYException, K8sDriverException {
         isUnique(model);

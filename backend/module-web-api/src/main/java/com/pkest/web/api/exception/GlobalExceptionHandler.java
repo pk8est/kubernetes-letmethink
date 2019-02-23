@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class, HYClientException.class})
     public ResponseBean<String> badRequestErrorHandler(HttpServletRequest req, Exception e) {
         this.exceptionLogger(req, e);
-        return ResultCode.BAD_REQUEST.wrap(e.getMessage());
+        return ResultCode.BAD_REQUEST.message(e.getMessage());
     }
 
     @ResponseBody
@@ -57,14 +57,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {K8sDriverException.class})
     public ResponseBean<String> k8sErrorHandler(HttpServletRequest req, K8sDriverException e) {
         this.exceptionLogger(req, e);
-        return ResultCode.K8S_SERVER_ERROR.wrap(e.getMessage());
+        return ResultCode.K8S_SERVER_ERROR.message(e.getMessage());
     }
 
     @ResponseBody
     @ExceptionHandler(value = {ConstraintViolationException.class})
     public ResponseBean<String> k8sErrorHandler(HttpServletRequest req, ConstraintViolationException e) {
         this.exceptionLogger(req, e);
-        return ResultCode.K8S_SERVER_ERROR.wrap(e.getMessage());
+        return ResultCode.K8S_SERVER_ERROR.message(e.getMessage());
     }
 
     @ResponseBody
