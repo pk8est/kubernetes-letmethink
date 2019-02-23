@@ -801,18 +801,29 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
     }
 
     @Override
-    public void deleteConfigmap(Map<String, String> labels) throws K8sDriverException {
+    public boolean deleteConfigmap(String name) throws K8sDriverException {
+        try {
+            client.configMaps().withName(name).delete();
+        } catch (KubernetesClientException e) {
+            throw new K8sDriverException(e);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteConfigmap(Map<String, String> labels) throws K8sDriverException {
         try {
             client.configMaps().withLabels(labels).delete();
         } catch (KubernetesClientException e) {
             throw new K8sDriverException(e);
         }
+        return true;
     }
 
     @Override
-    public void patchConfigmap(ConfigMap configMap) throws K8sDriverException {
+    public ConfigMap replaceConfigmap(ConfigMap configMap) throws K8sDriverException {
         try {
-            client.configMaps().withName(configMap.getMetadata().getName()).patch(configMap);
+            return client.configMaps().withName(configMap.getMetadata().getName()).replace(configMap);
         } catch (KubernetesClientException e) {
             throw new K8sDriverException(e);
         }

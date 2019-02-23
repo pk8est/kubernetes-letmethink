@@ -194,9 +194,11 @@ public interface KubeClient<T> {
 
     ConfigMap createConfigmap(ConfigMap configMap) throws K8sDriverException;
 
-    void deleteConfigmap(Map<String, String> labels) throws K8sDriverException;
+    boolean deleteConfigmap(String name) throws K8sDriverException;
 
-    void patchConfigmap(ConfigMap configMap) throws K8sDriverException;
+    boolean deleteConfigmap(Map<String, String> labels) throws K8sDriverException;
+
+    ConfigMap replaceConfigmap(ConfigMap configMap) throws K8sDriverException;
 
     PersistentVolume persistentVolumeInfo(String name) throws K8sDriverException;
 
