@@ -40,6 +40,7 @@ public class ConfigmapServiceImpl extends BaseServiceImpl<ConfigmapModel, Config
     @Transactional(rollbackFor=Throwable.class)
     public ConfigmapModel create(ConfigmapModel model, ConfigmapWarp warp) throws HYException, K8sDriverException {
         isUnique(model);
+
         ConfigMap k8sModel = k8sConfigmapService.build(model, warp);
         model.setYaml(HYObjMapper.toJson(k8sModel));
         GeCreate(model);

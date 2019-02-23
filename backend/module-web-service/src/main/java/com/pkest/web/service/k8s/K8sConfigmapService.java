@@ -21,5 +21,5 @@ public interface K8sConfigmapService extends K8sBaseService{
 
     boolean delete(ConfigmapModel model) throws HYException, K8sDriverException;
 
-    ConfigMap build(ConfigmapModel model, ConfigmapWarp warp);
+    ConfigMap build(ConfigmapModel model, ConfigmapWarp warp) throws HYException;
 }

@@ -29,7 +29,8 @@ public class K8sDriverException extends Exception {
     }
 
     public String getMessage(){
-        StringBuilder builder = new StringBuilder(cause.toString() + ", " + message);
+        StringBuilder builder = new StringBuilder(message);
+        if(cause != null) builder.append(", " + cause.toString());
         if(code != 0) builder.append(", code: [" + code + "]");
         if(status != null) builder.append(", status: [" + status.getMessage() + "]");
         return builder.toString();
