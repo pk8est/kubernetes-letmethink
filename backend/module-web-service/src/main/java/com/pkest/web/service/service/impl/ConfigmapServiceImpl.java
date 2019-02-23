@@ -44,7 +44,7 @@ public class ConfigmapServiceImpl extends BaseServiceImpl<ConfigmapModel, Config
         ConfigMap k8sModel = k8sConfigmapService.build(model, warp);
         model.setYaml(HYObjMapper.toJson(k8sModel));
         GeCreate(model);
-        k8sConfigmapService.create(model, k8sModel);
+        k8sConfigmapService.save(model, k8sModel);
         return getOrFail(model.getId());
     }
 
@@ -57,7 +57,7 @@ public class ConfigmapServiceImpl extends BaseServiceImpl<ConfigmapModel, Config
         model.setId(id);
         model.setYaml(HYObjMapper.toJson(k8sModel));
         GeUpdate(model);
-        k8sConfigmapService.update(model, k8sModel);
+        k8sConfigmapService.save(model, k8sModel);
         return getOrFail(model.getId());
     }
 

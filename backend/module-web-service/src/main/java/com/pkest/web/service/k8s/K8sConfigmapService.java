@@ -15,9 +15,9 @@ import io.fabric8.kubernetes.api.model.Namespace;
  */
 public interface K8sConfigmapService extends K8sBaseService{
 
-    ConfigMap create(ConfigmapModel model, ConfigMap k8sModel) throws HYException, K8sDriverException;
+    ConfigMap get(long cluserId, String name) throws HYException, K8sDriverException;
 
-    ConfigMap update(ConfigmapModel model, ConfigMap k8sModel) throws HYException, K8sDriverException;
+    ConfigMap save(ConfigmapModel model, ConfigMap k8sModel) throws HYException, K8sDriverException;
 
     boolean delete(ConfigmapModel model) throws HYException, K8sDriverException;
 

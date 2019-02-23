@@ -1,6 +1,7 @@
 package com.pkest.web.service.k8s.impl;
 
 import com.pkest.common.exception.HYException;
+import com.pkest.lib.kubernetes.KubeClient;
 import com.pkest.lib.kubernetes.exception.K8sDriverException;
 import com.pkest.repo.model.ConfigmapModel;
 import com.pkest.repo.model.NamespaceModel;
@@ -29,18 +30,27 @@ public class K8sConfigmapServiceImpl extends K8sBaseServiceImpl implements K8sCo
     private NamespaceService namespaceService;
 
     @Override
-    public ConfigMap create(ConfigmapModel model, ConfigMap k8sModel) throws HYException, K8sDriverException{
-        return getKubeClient(model.getClusterId()).createConfigmap(k8sModel);
+    public ConfigMap get(long cluserId, String name) throws HYException, K8sDriverException{
+        return getKubeClient(cluserId).getConfigmap(name);
     }
 
     @Override
-    public ConfigMap update(ConfigmapModel model, ConfigMap k8sModel) throws HYException, K8sDriverException{
-        return getKubeClient(model.getClusterId()).replaceConfigmap(k8sModel);
+    public ConfigMap save(ConfigmapModel model, ConfigMap k8sModel) throws HYException, K8sDriverException{
+        KubeClient kubeClient = getKubeClient(model.getClusterId());
+        if(get(model.getClusterId(), model.getName()) == null){
+            return kubeClient.createConfigmap(k8sModel);
+        }else {
+            return kubeClient.replaceConfigmap(k8sModel);
+
+        }
     }
 
     @Override
     public boolean delete(ConfigmapModel model) throws HYException, K8sDriverException {
-        return getKubeClient(model.getClusterId()).deleteConfigmap(model.getName());
+        if(get(model.getClusterId(), model.getName()) != null){
+            return getKubeClient(model.getClusterId()).deleteConfigmap(model.getName());
+        }
+        return true;
     }
 
     @Override
