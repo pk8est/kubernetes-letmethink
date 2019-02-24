@@ -16,8 +16,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@HYTable("lmt_configmap")
-public class ConfigmapModel extends BaseModel {
+@HYTable("lmt_secret")
+public class SecretModel extends BaseModel {
 
     protected Long id;
     protected Long creatorUid;
@@ -33,16 +33,11 @@ public class ConfigmapModel extends BaseModel {
 
     private Long clusterId;
     private Long namespaceId;
-    private Long setId;
-    private Long groupId;
     private String name;
     private String alias;
-    private String version;
     private String yaml;
     private String type;
     private String status;
-
-
 
 }
 

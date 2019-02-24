@@ -1355,14 +1355,14 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
     }
 
     @Override
-    public Secret patchSecret(Secret secret)
+    public Secret replaceSecret(Secret secret)
             throws K8sDriverException {
         logger.debug("patch secret=" + secret);
         if (secret == null) {
             return null;
         }
         try {
-            return client.secrets().withName(secret.getMetadata().getName()).patch(secret);
+            return client.secrets().withName(secret.getMetadata().getName()).replace(secret);
         } catch (KubernetesClientException e) {
             throw new K8sDriverException(e);
         }

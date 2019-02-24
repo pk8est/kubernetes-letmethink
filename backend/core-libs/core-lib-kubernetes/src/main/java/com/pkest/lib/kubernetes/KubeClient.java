@@ -331,7 +331,7 @@ public interface KubeClient<T> {
     Secret createSecret(Secret secret)
             throws K8sDriverException;
 
-    Secret patchSecret(Secret secret)
+    Secret replaceSecret(Secret secret)
             throws K8sDriverException;
 
     Secret secretInfo(String name)
