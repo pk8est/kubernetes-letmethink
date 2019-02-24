@@ -5,13 +5,13 @@ import com.pkest.common.exception.HYException;
 import com.pkest.common.exception.HYKnownException;
 import com.pkest.common.exception.RecordNotFoundException;
 import com.pkest.lib.kubernetes.exception.K8sDriverException;
-import com.pkest.repo.mapper.SecretMapper;
-import com.pkest.repo.model.SecretModel;
+import com.pkest.repo.mapper.IngressMapper;
+import com.pkest.repo.model.IngressModel;
 import com.pkest.util.HYObjMapper;
-import com.pkest.web.service.k8s.K8sSecretService;
-import com.pkest.web.service.service.SecretService;
-import com.pkest.web.service.warp.SecretWarp;
-import io.fabric8.kubernetes.api.model.Secret;
+import com.pkest.web.service.k8s.K8sIngressService;
+import com.pkest.web.service.service.IngressService;
+import com.pkest.web.service.warp.IngressWarp;
+import io.fabric8.kubernetes.api.model.extensions.Ingress;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,42 +26,42 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Service
-public class SecretServiceImpl extends BaseServiceImpl<SecretModel, SecretMapper> implements SecretService {
+public class IngressServiceImpl extends BaseServiceImpl<IngressModel, IngressMapper> implements IngressService {
 
     @Resource
-    private K8sSecretService k8sSecretService;
+    private K8sIngressService k8sIngressService;
 
     @Override
-    public SecretModel getOrFail(long id) throws HYException{
-        return GeFind(id).orElseThrow(new RecordNotFoundException("密钥["+id+"]不存在!"));
+    public IngressModel getOrFail(long id) throws HYException{
+        return GeFind(id).orElseThrow(new RecordNotFoundException("服务["+id+"]不存在!"));
     }
 
     @Override
     @Transactional(rollbackFor=Throwable.class)
-    public SecretModel create(SecretModel model, SecretWarp warp) throws HYException, K8sDriverException {
+    public IngressModel create(IngressModel model, IngressWarp warp) throws HYException, K8sDriverException {
         isUnique(model);
-        Secret k8sModel = k8sSecretService.build(model, warp);
+        Ingress k8sModel = k8sIngressService.build(model, warp);
         model.setYaml(HYObjMapper.toJson(k8sModel));
         GeCreate(model);
-        k8sSecretService.save(model, k8sModel);
+        k8sIngressService.save(model, k8sModel);
         return getOrFail(model.getId());
     }
 
     @Override
     @Transactional(rollbackFor=Throwable.class)
-    public SecretModel update(long id, SecretModel model, SecretWarp warp) throws HYException, K8sDriverException {
+    public IngressModel update(long id, IngressModel model, IngressWarp warp) throws HYException, K8sDriverException {
         isUnique(model);
-        Secret k8sModel = k8sSecretService.build(model, warp);
+        Ingress k8sModel = k8sIngressService.build(model, warp);
         getOrFail(id);
         model.setId(id);
         model.setYaml(HYObjMapper.toJson(k8sModel));
         GeUpdate(model);
-        k8sSecretService.save(model, k8sModel);
+        k8sIngressService.save(model, k8sModel);
         return getOrFail(model.getId());
     }
 
     @Override
-    public void isUnique(@Nonnull SecretModel model) throws HYException {
+    public void isUnique(@Nonnull IngressModel model) throws HYException {
         if(!GeUnique(model, new String[]{"clusterId", "namespaceId", "name"})){
             throw new HYKnownException(ResultCode.SERVER_ERROR.message("[" + model.getName() + "]已经存在!"));
         }
@@ -70,8 +70,8 @@ public class SecretServiceImpl extends BaseServiceImpl<SecretModel, SecretMapper
     @Override
     @Transactional(rollbackFor=Throwable.class)
     public boolean delete(long id) throws HYException, K8sDriverException{
-        SecretModel model = getOrFail(id);
-        return GeDelete(id) == 1 &&  k8sSecretService.delete(model);
+        IngressModel model = getOrFail(id);
+        return GeDelete(id) == 1 &&  k8sIngressService.delete(model);
     }
 
 }

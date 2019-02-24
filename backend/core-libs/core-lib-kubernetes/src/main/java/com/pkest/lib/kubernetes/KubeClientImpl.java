@@ -1123,7 +1123,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
     }
 
     @Override
-    public Service serviceInfo(String serviceName)
+    public Service getService(String serviceName)
             throws K8sDriverException {
         logger.debug("get service info of " + serviceName);
         if (serviceName == null || serviceName.isEmpty()) {
@@ -1136,7 +1136,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         }
     }
     @Override
-    public Service serviceInfo(String namespace,String serviceName)
+    public Service getService(String namespace,String serviceName)
             throws K8sDriverException {
         logger.debug("get service info of " + serviceName);
         if (serviceName == null || serviceName.isEmpty()) {
@@ -1548,7 +1548,7 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
     }
 
     @Override
-    public Ingress ingressInfo(String ingressName) throws K8sDriverException {
+    public Ingress getIngress(String ingressName) throws K8sDriverException {
         if (ingressName == null) {
             return null;
         }

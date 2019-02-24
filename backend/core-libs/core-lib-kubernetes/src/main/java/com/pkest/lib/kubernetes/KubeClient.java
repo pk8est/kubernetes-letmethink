@@ -271,9 +271,9 @@ public interface KubeClient<T> {
     Service createService(Service service)
             throws K8sDriverException;
 
-    Service serviceInfo(String namespace, String serviceName) throws K8sDriverException;
+    Service getService(String namespace, String serviceName) throws K8sDriverException;
 
-    Service serviceInfo(String serviceName)
+    Service getService(String serviceName)
             throws K8sDriverException;
 
     Service replaceService(String serviceName, Service service)
@@ -363,7 +363,7 @@ public interface KubeClient<T> {
 
     Ingress createIngress(Ingress ingress) throws K8sDriverException;
 
-    Ingress ingressInfo(String ingressName) throws K8sDriverException;
+    Ingress getIngress(String ingressName) throws K8sDriverException;
 
     Ingress replaceIngress(String ingressName, Ingress ingress) throws K8sDriverException;
 

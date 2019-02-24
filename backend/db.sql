@@ -128,3 +128,45 @@ CREATE TABLE `lmt_secret` (
   KEY `namespace_id` (`namespace_id`),
   KEY `cluster_id` (`cluster_id`)
 ) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS `lmt_service`;
+CREATE TABLE `lmt_service` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `cluster_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '',
+  `namespace_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '',
+  `name` varchar(100) NOT NULL DEFAULT "" COMMENT '',
+  `alias` varchar(100) NOT NULL DEFAULT "" COMMENT '',
+  `yaml` text COMMENT 'yaml/json',
+  `type` varchar(50) NOT NULL DEFAULT '' COMMENT '类型',
+  `status` varchar(50) NOT NULL DEFAULT 1 COMMENT '',
+  `delete_status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '',
+  `creator_uid` bigint(20) NOT NULL DEFAULT 0 COMMENT '创建人',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `description` text COMMENT '备注',
+  PRIMARY KEY (`id`),
+  KEY `namespace_id` (`namespace_id`),
+  KEY `cluster_id` (`cluster_id`)
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS `lmt_ingress`;
+CREATE TABLE `lmt_ingress` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `cluster_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '',
+  `namespace_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '',
+  `name` varchar(100) NOT NULL DEFAULT "" COMMENT '',
+  `alias` varchar(100) NOT NULL DEFAULT "" COMMENT '',
+  `yaml` text COMMENT 'yaml/json',
+  `type` varchar(50) NOT NULL DEFAULT '' COMMENT '类型',
+  `status` varchar(50) NOT NULL DEFAULT 1 COMMENT '',
+  `delete_status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '',
+  `creator_uid` bigint(20) NOT NULL DEFAULT 0 COMMENT '创建人',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `description` text COMMENT '备注',
+  PRIMARY KEY (`id`),
+  KEY `namespace_id` (`namespace_id`),
+  KEY `cluster_id` (`cluster_id`)
+) ENGINE=InnoDB;
