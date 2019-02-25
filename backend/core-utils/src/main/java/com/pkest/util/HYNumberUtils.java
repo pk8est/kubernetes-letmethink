@@ -18,7 +18,7 @@ public class HYNumberUtils {
         if(isNullorZero(i)){
             return false;
         }
-        return i.intValue() > 0;
+        return i.doubleValue() > 0;
     }
 
     public static <T> T number(String content) {
