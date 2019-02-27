@@ -102,15 +102,16 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
     }
 
     @Override
-    public PageInfo<T> GePagination(CompareBuilder compareBuilder, Pageable pageable){
-        return GePagination(new CompareBuilder(), pageable, true);
+    public PageInfo<T> GePagination(CompareBuilder builder, Pageable pageable){
+        return GePagination(builder, pageable, true);
     }
 
     @Override
-    public PageInfo<T> GePagination(CompareBuilder compareBuilder, Pageable pageable, boolean filterDeleteStatus){
-        if(filterDeleteStatus) compareBuilder.filter(HYStringUtils.toUnderline(DELETE_FIELD_KEY), 0);
+    public PageInfo<T> GePagination(CompareBuilder builder, Pageable pageable, boolean filterDeleteStatus){
+        if(filterDeleteStatus) builder.filter(HYStringUtils.toUnderline(DELETE_FIELD_KEY), 0);
         PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize(), true);
-        return new PageInfo(getMapper().findAll(compareBuilder));
+        builder.setSortable(pageable.getSort());
+        return new PageInfo(getMapper().findAll(builder));
     }
 
     @Override
