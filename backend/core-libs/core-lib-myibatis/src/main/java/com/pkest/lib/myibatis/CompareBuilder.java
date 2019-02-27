@@ -136,6 +136,21 @@ public class CompareBuilder extends LinkedHashMap<CompareBuilder.CompareField, O
         setSortable(sort);
     }
 
+    public CompareBuilder(Pageable pageable){
+        this(pageable, null);
+    }
+
+    public CompareBuilder(Sort sort){
+        this();
+        setSortable(sort);
+    }
+
+    public CompareBuilder(Pageable pageable, Sort sort){
+        this();
+        setPageable(pageable);
+        setSortable(sort);
+    }
+
     public CompareBuilder(Map<String, String> conditions){
         for(Map.Entry<String, String> entry: conditions.entrySet()){
             filter(entry.getKey(), entry.getValue());
