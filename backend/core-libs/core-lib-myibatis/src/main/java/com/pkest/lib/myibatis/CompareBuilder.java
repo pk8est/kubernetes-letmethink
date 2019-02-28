@@ -20,6 +20,7 @@ public class CompareBuilder extends LinkedHashMap<CompareBuilder.CompareField, O
     private Sort sortable;
     private String groupBy;
     private String having;
+    private transient CompareField tailKey;
 
     public enum OperatorEnum{
         EQ("="), NEQ("<>"), GT(">"), LT("<"), EGT(">="), ELT("<="), IN("IN"), NOTIN("NOT IN"), BETWEEN("BETWEEN"), NOTBETWEEN("NOT BETWEEN"),
@@ -176,7 +177,14 @@ public class CompareBuilder extends LinkedHashMap<CompareBuilder.CompareField, O
     }
 
     public CompareBuilder endGroup(){
-        return addStatementCondition(")", null);
+        if(tailKey != null){
+            if(!tailKey.getField().equals("(")){
+                addStatementCondition(")", null);
+            }else{
+                this.remove(tailKey);
+            }
+        }
+        return this;
     }
 
     public CompareBuilder filter(String field, Object value){
