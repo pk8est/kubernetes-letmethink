@@ -10,11 +10,10 @@ import com.pkest.common.interfaces.Update;
 import com.pkest.lib.kubernetes.exception.K8sDriverException;
 import com.pkest.lib.myibatis.CompareBuilder;
 import com.pkest.repo.model.SecretModel;
+import com.pkest.web.api.annotation.ApiPageable;
 import com.pkest.web.api.request.SecretBody;
 import com.pkest.web.service.service.SecretService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -43,11 +42,8 @@ public class SecretController extends BaseController<SecretService> {
 
     @ResponseBody
     @GetMapping("/list")
+    @ApiPageable
     @ApiOperation(value="列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="page", value="分页页码", dataType="Int", paramType = "query"),
-            @ApiImplicitParam(name="size", value="分页大小", dataType="Int", paramType = "query"),
-    })
     public ResponseBean<PageInfo<SecretModel>> list(Pageable pageable) throws HYException{
         CompareBuilder builder = new CompareBuilder();
         return ResultCode.SUCCESS.wrap(getService().GePagination(builder, pageable));

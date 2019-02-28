@@ -10,11 +10,10 @@ import com.pkest.common.interfaces.Update;
 import com.pkest.lib.kubernetes.exception.K8sDriverException;
 import com.pkest.lib.myibatis.CompareBuilder;
 import com.pkest.repo.model.ServiceModel;
+import com.pkest.web.api.annotation.ApiPageable;
 import com.pkest.web.api.request.ServiceBody;
 import com.pkest.web.service.service.ServiceService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -44,10 +43,7 @@ public class ServiceController extends BaseController<ServiceService> {
     @ResponseBody
     @GetMapping("/list")
     @ApiOperation(value="列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="page", value="分页页码", dataType="Int", paramType = "query"),
-            @ApiImplicitParam(name="size", value="分页大小", dataType="Int", paramType = "query"),
-    })
+    @ApiPageable
     public ResponseBean<PageInfo<ServiceModel>> list(Pageable pageable) throws HYException{
         CompareBuilder builder = new CompareBuilder();
         return ResultCode.SUCCESS.wrap(getService().GePagination(builder, pageable));
