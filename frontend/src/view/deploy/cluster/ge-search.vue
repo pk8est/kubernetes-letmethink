@@ -1,19 +1,35 @@
 <template>
   <Form :model="form" inline label-position="left" :label-width="80">
-      <FormItem :label="typeof column.label != 'function' ? (column.label ? column.label : column.column) : ''" v-for="column in columns">
+      <FormItem :label="column.label !== false && typeof column.label != 'function' ? (column.label ? column.label : column.column) : ''" v-for="column in columns">
         <slot v-if="typeof column.label == 'function'">{{ renderItem(column.label) }}</slot>
-        <!--<Node :node="column.label" v-if="typeof column.label == 'function'"></Node>-->
-        <Select v-model="form[column.column]" v-if="(!column.type || column.type=='select') && column.options" :disabled="column.disabled" v-bind="column.props" v-on="column.on">
-            <Option :value="option.value" v-for="(option, index) in column.options" :disabled="option.disabled" v-bind="option.props" v-on="option.on">
-              <!--<Node :node="option.label"></Node>-->
-              <!--<slot :name="'select-option-' + column.type + '-' + index">{{ renderItem(option.label, 'select-option-' + column.type + '-' + index) }}</slot>-->
-              <slot>{{ renderItem(option.label, option, index) }}</slot>
+
+        <Select v-model="form[column.column]" v-if="(!column.geType || column.geType=='select') && column.options"
+          :disabled="column.disabled"
+          :multiple="column.multiple"
+          :size="column.size"
+          :placeholder="column.placeholder"
+          :filterable="column.filterable"
+          v-bind="column.props"
+          v-on="column.on" >
+            <Option :value="option.value" v-for="(option, index) in column.options"
+              :disabled="option.disabled"
+              v-bind="option.props"
+              v-on="option.on">
+                <slot>{{ renderItem(option.label, option, index) }}</slot>
             </Option>
         </Select>
 
-        <Input v-model="form[column.column]" type="text" v-else-if="!column.type || column.type=='type'" :disabled="column.disabled" v-bind="column.props" v-on="column.on"/>
+        <Input v-model="form[column.column]" :type="column.type" v-else-if="!column.geType || column.geType=='input'"
+          :size="column.size"
+          :disabled="column.disabled"
+          :placeholder="column.placeholder"
+          :readonly="column.readonly"
+          :rows="column.rows"
+          :number="column.number"
+          v-bind="column.props"
+          v-on="column.on" />
 
-        <Radio v-model="form[column.column]" v-else-if="column.type=='radio'"
+        <Radio v-model="form[column.column]" v-else-if="column.geType=='radio'"
           :size="column.size"
           :disabled="column.disabled"
           :true-value="column.trueValue"
@@ -21,25 +37,26 @@
           v-bind="column.props"
           v-on="column.on"/>
 
-        <RadioGroup v-model="form[column.column]" v-else-if="column.type=='radioGroup'"
+        <RadioGroup v-model="form[column.column]" v-else-if="column.geType=='radioGroup'"
           :size="column.size"
-          :type ="column.button"
+          :type ="column.type"
           :vertical="column.vertical"
           :disabled="column.disabled"
           v-bind="column.props"
           v-on="column.on">
-            <Radio v-model="form[column.column]" v-for="(option, index) in column.options"
-              :label="option.label"
+            <Radio v-for="(option, index) in column.options"
+              :label="option.value"
               :size="option.size"
               :disabled="option.disabled"
               :true-value="option.trueValue"
               :false-value="option.falseValue"
               v-bind="option.props"
-              v-on="option.on"/>
+              v-on="option.on">
+              <slot>{{ renderItem(option.label != undefined ? option.label : option.value) }}</slot>
           </Radio>
         </RadioGroup>
 
-        <Checkbox v-model="form[column.column]" v-else-if="column.type=='checkbox'"
+        <Checkbox v-model="form[column.column]" v-else-if="column.geType=='checkbox'"
           :label="column.label"
           :size="column.size"
           :disabled="column.disabled"
@@ -49,21 +66,47 @@
           v-bind="column.props"
           v-on="column.on"/>
 
-        <CheckboxGroup v-model="form[column.column]" v-else-if="column.type=='checkboxGroup'"
+        <CheckboxGroup v-model="form[column.column]" v-else-if="column.geType=='checkboxGroup'"
           :size="column.size"
           v-bind="column.props"
           v-on="column.on">
-            <Checkbox v-model="form[column.column]" v-for="(option, index) in column.options"
-              :label="option.label"
+            <Checkbox v-for="(option, index) in column.options"
+              :label="option.value"
               :size="option.size"
               :disabled="option.disabled"
               :indeterminate="option.indeterminate"
               :true-value="option.trueValue"
               :false-value="option.falseValue"
               v-bind="option.props"
-              v-on="option.on"/>
-            </Radio>
+              v-on="option.on">
+              <slot>{{ renderItem(option.label != undefined ? option.label : option.value) }}</slot>
+            </Checkbox>
         </CheckboxGroup>
+
+        <i-switch v-model="form[column.column]" v-else-if="column.geType=='switch'"
+          :size="column.size"
+          :disabled="column.disabled"
+          :loading="column.loading"
+          :true-value="column.trueValue"
+          :false-value="column.falseValue"
+          v-bind="column.props"
+          v-on="column.on">
+          <span slot="open"><slot>{{ renderItem(column.open != undefined ? column.open : '开') }}</slot></span>
+          <span slot="close"><slot>{{ renderItem(column.close != undefined ? column.close : '关') }}</slot></span>
+        </i-switch>
+
+        <AutoComplete v-model="form[column.column]" v-else-if="column.geType=='autoComplete'"
+         :data="column.data"
+         :size="column.size"
+         :disabled="column.disabled"
+         :filter-method	="column.filterMethod"
+         :placeholder="column.placeholder"
+         v-bind="column.props"
+         v-on="column.on">
+         <Option v-for="(item, index) in column.options" :value="item" :key="item" >
+           <slot>{{ renderItem((column.optionTemplate != undefined ? column.optionTemplate : item), item, index) }}</slot>
+         </Option>
+       </AutoComplete>
 
       </FormItem>
       <FormItem>
@@ -86,18 +129,17 @@ export default {
       }
   },
   computed: {
-    form: function() {
-      let _form = {}
-      this.columns.forEach(column => _form[column.column] = column.value)
-      return _form
+    form: {
+      get: function(){
+        let _form = {}
+        this.columns.forEach(column => _form[column.column] = column.value)
+        return _form
+      }
     }
   },
   methods: {
-    /*renderItem(fn, name, ...args){
-      this.$slots[name] = typeof fn == 'function' ? fn(this.$createElement, args) : fn
-    },*/
     renderItem(fn, ...args){
-      this.$slots.default = typeof fn == 'function' ? fn(this.$createElement, args) : fn
+      this.$slots.default = typeof fn == 'function' ? fn(this.$createElement, ...args) : fn
     }
   }
 }

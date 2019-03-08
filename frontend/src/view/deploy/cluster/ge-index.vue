@@ -30,6 +30,7 @@ export default {
             column: 'type',
             label: '类型',
             value: 2,
+            filterable: true,
             props: {
               style: "width: 200px"
             },
@@ -56,13 +57,13 @@ export default {
           {
             column: 'radio',
             label: () => (<span>RADIO</span>),
-            type: 'radio'
+            geType: 'radio'
           },
           {
             column: 'radioGroup',
             label: 'RadioGroup',
-            type: 'radioGroup',
-            button: 'button',
+            geType: 'radioGroup',
+            type: 'button',
             vertical: false,
             options: [{
               label: "金斑蝶"
@@ -74,20 +75,44 @@ export default {
             column: 'checkbox',
             label: 'Checkbox',
             indeterminate: false,
-            size: 50,
-            type: 'checkbox'
+            size: "small",
+            geType: 'checkbox'
           },
           {
             column: 'checkboxGroup',
-            type: 'checkboxGroup',
-            value: '2',
-            size: 30,
+            geType: 'checkboxGroup',
+            value: ['a'],
+            size: "large",
             options: [{
-              label: "金斑蝶"
+              label: "金斑蝶",
+              value: 'a'
             },{
-              label: "爪哇犀牛"
+              label: "爪哇犀牛",
+              value: 'b'
             }]
-          }
+          },
+          {
+            column: 'switch',
+            value: true,
+            size: "default",
+            geType: 'switch',
+            loading: true,
+            open: () => (<Icon type="md-checkmark"></Icon>)
+          },
+          {
+            column: 'autoComplete',
+            geType: 'autoComplete',
+            label: false,
+            data: ['apple', 'iphone', 'home'],
+            filterMethod: (value, option) => option.toUpperCase().indexOf(value.toUpperCase()) !== -1
+          },
+          {
+            column: 'autoComplete',
+            label: '邮箱',
+            geType: 'autoComplete',
+            options: [ '@qq.com', '@163.com', '@sina.com' ],
+            optionTemplate: (h, value) => (<span><Icon custom="ivu-icon ivu-icon-ios-bug"/> { value } </span>)
+          },
         ]
       }
     }
