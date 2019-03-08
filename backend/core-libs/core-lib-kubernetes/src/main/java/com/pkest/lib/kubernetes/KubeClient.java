@@ -180,15 +180,22 @@ public interface KubeClient<T> {
 
     PersistentVolumeList listAllPersistentVolume() throws K8sDriverException;
 
+    PersistentVolume getPersistentVolume(String name);
+
     PersistentVolume createPersistentVolume(PersistentVolume persistentVolume) throws K8sDriverException;
+
+    PersistentVolumeClaim getPersistentVolumeClaim(String name);
 
     PersistentVolumeClaim createPersistentVolumeClaim(PersistentVolumeClaim persistentVolumeClaim) throws K8sDriverException;
 
+    PersistentVolumeClaim replacePersistentVolumeClaim(String name, PersistentVolumeClaim persistentVolumeClaim)
+            throws K8sDriverException;
+
     PersistentVolumeClaim persistentVolumeClaimInfo(String name) throws K8sDriverException;
 
-    void deletePersistentVolumeClaim(String name) throws K8sDriverException;
+    boolean deletePersistentVolumeClaim(String name) throws K8sDriverException;
 
-    void deleteEndpoints(String name) throws K8sDriverException;
+    boolean deleteEndpoints(String name) throws K8sDriverException;
 
     ConfigMap getConfigmap(String name) throws K8sDriverException;
 

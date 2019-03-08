@@ -730,6 +730,11 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
     }
 
     @Override
+    public PersistentVolume getPersistentVolume(String name) {
+        return client.persistentVolumes().withName(name).get();
+    }
+
+    @Override
     public PersistentVolume createPersistentVolume(PersistentVolume persistentVolume) throws K8sDriverException {
         if (persistentVolume == null) {
             return null;
@@ -740,6 +745,11 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
         } catch (KubernetesClientException e) {
             throw new K8sDriverException("create pv error, message is " + e);
         }
+    }
+
+    @Override
+    public PersistentVolumeClaim getPersistentVolumeClaim(String name) {
+        return client.persistentVolumeClaims().withName(name).get();
     }
 
     @Override
@@ -756,6 +766,21 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
     }
 
     @Override
+    public PersistentVolumeClaim replacePersistentVolumeClaim(String name, PersistentVolumeClaim persistentVolumeClaim)
+            throws K8sDriverException {
+        if (name == null || persistentVolumeClaim == null) {
+            return null;
+        }
+        logger.debug("replace persistent Volume Claim with name=" + name + ", persistentVolumeClaim=\n" + persistentVolumeClaim);
+        try {
+            return client.persistentVolumeClaims().withName(name).replace(persistentVolumeClaim);
+        } catch (KubernetesClientException e) {
+            throw new K8sDriverException(e);
+        }
+    }
+
+
+    @Override
     public PersistentVolumeClaim persistentVolumeClaimInfo(String name) throws K8sDriverException {
         try {
             return client.persistentVolumeClaims().withName(name).get();
@@ -765,18 +790,18 @@ public class KubeClientImpl implements KubeClient<KubernetesClient> {
     }
 
     @Override
-    public void deletePersistentVolumeClaim(String name) throws K8sDriverException {
+    public boolean deletePersistentVolumeClaim(String name) throws K8sDriverException {
         try {
-            client.persistentVolumeClaims().withName(name).delete();
+            return client.persistentVolumeClaims().withName(name).delete();
         } catch (KubernetesClientException e) {
             throw new K8sDriverException(e);
         }
     }
 
     @Override
-    public void deleteEndpoints(String name) throws K8sDriverException {
+    public boolean deleteEndpoints(String name) throws K8sDriverException {
         try {
-            client.endpoints().withName(name).delete();
+            return client.endpoints().withName(name).delete();
         } catch (KubernetesClientException e) {
             throw new K8sDriverException(e);
         }
