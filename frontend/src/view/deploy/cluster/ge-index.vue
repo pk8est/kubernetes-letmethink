@@ -110,8 +110,8 @@ export default {
             column: 'autoComplete',
             label: '邮箱',
             geType: 'autoComplete',
-            options: [ '@qq.com', '@163.com', '@sina.com' ],
-            optionTemplate: (h, value) => (<span><Icon custom="ivu-icon ivu-icon-ios-bug"/> { value } </span>)
+            data: [ '@qq.com', '@163.com', '@sina.com' ],
+            template: (h, value) => (<span><Icon custom="ivu-icon ivu-icon-ios-bug"/> { value } </span>)
           },
         ]
       }
