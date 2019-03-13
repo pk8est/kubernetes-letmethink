@@ -3,7 +3,7 @@
       <Table :columns="showColumns" :data="data" v-bind="$attrs"
       @on-sort-change="sortChangeHandler"
       v-on="on" />
-      <Row style="margin-top: 10px">
+      <Row style="margin-top: 15px">
         <Col span="23">
           <Page :total="total"
             show-sizer
@@ -13,9 +13,9 @@
             @on-page-size-change="pageSizeChangeHandler" />
         </Col>
         <Col span="1">
-          <Icon type="md-settings" @click="settingDrawer = true" size="24"/>
-          <Drawer title="设置" :closable="false" v-model="settingDrawer">
-              <p v-for="column in setting"><Checkbox v-model="column.show">{{ column.title }}</Checkbox></p>
+          <Button shape="circle" icon="md-settings" @click="settingDrawer = true" style="float: right"></Button>
+          <Drawer title="显示设置" :closable="false" v-model="settingDrawer" width="150">
+              <p v-for="column in setting"><Checkbox v-model="column.show" size="large">&nbsp;&nbsp;{{ column.title }}</Checkbox></p>
           </Drawer>
         </Col>
       </Row>
@@ -63,7 +63,7 @@ export default {
       this.columns.map((column) => {
         if(column.key){
           setting[column.key] = {
-            show: column.show ? column.show : this.defaultShow,
+            show: column.show !== undefined ? column.show : this.defaultShow,
             title: column.title
           }
         }

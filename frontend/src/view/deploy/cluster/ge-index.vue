@@ -1,29 +1,62 @@
 <template>
-  <div class="config-main">
+  <div>
     <card>
-      <ge-search  :columns="searchConfig" @search="searchHandler" @reset="resetHandler"/>
+      <ge-search  :columns="searchConfig" @search="searchHandler" @reset="resetHandler">
+        <Button type="error" style="margin-left: 8px" @click="createHandler">新建</Button>
+      </ge-search>
       <ge-listgrid :columns="listgridConfig" :data="listgrid.data" :total="listgrid.total"
         @sort-change="sortChangeHandler"
         @page-change="pageChangeHandler"
         @page-size-change="pageSizeChangeHandler"/>
+        <Modal v-model="showModalForm" :title="modalFormTitle">
+            <GeModalForm :columns="formConfig" :initForm="initForm" :update="update"/>
+            <div slot="footer">
+                <Button type="text" size="large" @click="modalCancel">取消</Button>
+                <Button type="primary" size="large" @click="formSubmitHandler">提交</Button>
+            </div>
+        </Modal>
     </card>
   </div>
 </template>
 
 <script>
 import _ from 'lodash'
+import emitter from 'iview/src/mixins/emitter'
+import GeDay from './ge-day'
+import GeTag from './ge-tag'
 import GeSearch from './ge-search'
 import GeListgrid from './ge-listgrid'
+import GeModalForm from './ge-modal-form'
 import API from '@/api/cluster'
+
+const statusOpts = [
+  {
+    value: 1,
+    label: '正常',
+    color: 'success'
+  },
+  {
+    value: -1,
+    label: '异常'
+  }
+]
 
 export default {
   name: 'GeIndex',
   components: {
+    GeDay,
+    GeTag,
     GeSearch,
-    GeListgrid
+    GeListgrid,
+    GeModalForm
   },
+  mixins: [emitter],
   data(){
     return {
+      update: false,
+      showModalForm: false,
+      modalFormTitle: "",
+      initForm: {},
       queryParam: {},
       sortParam: {},
       pageParam: {
@@ -34,16 +67,111 @@ export default {
         {
           name: "",
           listgrid: {
+            fixed: 'left',
+            width: 50,
             type: 'selection'
           }
-        },
-        {
+        }
+        ,{
           column: 'id',
           name: "ID",
           search: true,
+          form: false,
           listgrid: {
-            sortable: true,
-            render: (h, { row }) => (<span><Icon custom="ivu-icon ivu-icon-ios-bug" size="16" color="red" />{ row.id }</span>)
+            fixed: 'left',
+            maxWidth: 100,
+            sortable: true
+          }
+        }
+        ,{
+          column: 'name',
+          name: "名称",
+          search: true,
+          form: {
+            disupdated: true,
+            rules: [{required: true, message: '该值不能为空', trigger: 'blur'}]
+          }
+        }
+        ,{
+          column: 'clusterMasterUrl',
+          name: "Master"
+        }
+        ,{
+          column: 'clusterUsername',
+          name: "用户名",
+          search: true,
+          listgrid: {
+            sortable: true
+          }
+        }
+        ,{
+          column: 'clusterCertKey',
+          name: "CertKey",
+          listgrid: false
+        }
+        ,{
+          column: 'clusterCertData',
+          name: "CertData",
+          listgrid: false
+        }
+        ,{
+          column: 'status',
+          name: "状态",
+          search: {
+            clearable: true,
+            options: statusOpts
+          },
+          form: {
+            options: statusOpts
+          },
+          listgrid: {
+            render: (h, {row, column}) => (<GeTag value={ row[column.key] } options={ statusOpts } />)
+          }
+        }
+        ,{
+          column: 'creatorUid',
+          name: "创建人",
+          form: false,
+          search: true
+        }
+        ,{
+          column: 'createdAt',
+          name: "创建时间",
+          form: false,
+          listgrid: {
+            render:  (h, {row, column}) => (<GeDay value={ row[column.key] }/>)
+          }
+        }
+        ,{
+          column: 'updatedAt',
+          name: "更新时间",
+          form: false,
+          listgrid: {
+            show: false,
+            render:  (h, {row, column}) => (<GeDay value={ row[column.key] }/>)
+          }
+        }
+        ,{
+          column: 'description',
+          name: "描述",
+          listgrid: {
+            show: false
+          }
+        }
+        ,{
+          column: '',
+          name: "操作",
+          listgrid: {
+            fixed: 'right',
+            align: 'center',
+            width: 180,
+            render: (h, {row}) => (
+              <div>
+                <Button size="small" style="margin-right:5px">查看</Button>
+                <Button size="small" style="margin-right:5px" on-click={ () => this.updateHandler(row) }>更新</Button>
+                <Button size="small" style="margin-right:5px" type="error">删除</Button>
+              </div>
+            )
           }
         }
       ],
@@ -183,7 +311,23 @@ export default {
         }
       })
       return columns
+    },
+    formConfig(){
+      let columns = []
+      this.configs.map((config, index) => {
+        if(config.form !== false && config.column){
+          columns.push(_.defaultsDeep({}, config.form, {
+            column: config.column,
+            label: config.name
+          }))
+        }
+      })
+      return columns
     }
+  },
+  created () {
+    this.listen()
+    this.list()
   },
   methods: {
     list () {
@@ -219,10 +363,31 @@ export default {
     pageSizeChangeHandler(size){
       this.pageParam.size = size
       this.list()
+    },
+    createHandler(){
+      this.update = false
+      this.modalFormTitle = "创建"
+      this.initForm = {}
+      this.showModalForm = true
+    },
+    updateHandler(row){
+      this.update = true
+      this.modalFormTitle = "更新: [ " + (row.name || row.id) + " ]"
+      this.initForm = row
+      this.showModalForm = true
+    },
+    modalCancel(){
+      this.showModalForm = false
+    },
+    formSubmitHandler(){
+      this.broadcast('GeModalForm', 'submit')
+    },
+    listen () {
+      this.$on('recieve', ({ update, data, valid }) => {
+        this.showModalForm = false
+        console.info(update, data, valid )
+      })
     }
-  },
-  mounted () {
-    this.list()
   }
 }
 </script>
