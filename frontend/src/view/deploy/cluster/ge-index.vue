@@ -2,22 +2,23 @@
   <div>
     <card>
       <ge-search  :columns="searchConfig" @search="searchHandler" @reset="resetHandler">
-        <Button type="error" style="margin-left: 8px" @click="createHandler">新建</Button>
+        <Button type="success" style="margin-left: 8px" @click="createHandler">新建</Button>
       </ge-search>
-      <ge-listgrid :columns="listgridConfig" :data="listgrid.data" :total="listgrid.total"
+      <ge-listgrid ref="listgrid" :columns="listgridConfig" :data="listgrid.data" :total="listgrid.total"
+        :buttons="listgridButtons"
         @sort-change="sortChangeHandler"
         @page-change="pageChangeHandler"
         @page-size-change="pageSizeChangeHandler"/>
-        <Modal v-model="showModalForm" :title="modalFormTitle">
-            <GeModalForm :columns="formConfig" :initForm="initForm" :update="update"/>
-            <div slot="footer">
-                <Button type="text" size="large" @click="modalCancel">取消</Button>
-                <Button type="primary" size="large" @click="formSubmitHandler">提交</Button>
-            </div>
-        </Modal>
-        <Drawer width="640" v-model="showModalView" :title="modalViewTitle">
-          <GeView :columns="viewConfig" :data="view"></GeView>
-        </Drawer>
+      <Modal v-model="showModalForm" :title="modalFormTitle">
+          <GeModalForm :columns="formConfig" :initForm="initForm" :update="update"/>
+          <div slot="footer">
+              <Button type="text" size="large" @click="modalCancel">取消</Button>
+              <Button type="primary" size="large" @click="formSubmitHandler">提交</Button>
+          </div>
+      </Modal>
+      <Drawer width="640" v-model="showModalView" :title="modalViewTitle">
+        <GeView :columns="viewConfig" :data="view"></GeView>
+      </Drawer>
     </card>
   </div>
 </template>
@@ -35,13 +36,14 @@ import API from '@/api/cluster'
 
 const statusOpts = [
   {
-    value: 1,
+    value: '1',
     label: '正常',
     color: 'success'
   },
   {
-    value: -1,
-    label: '异常'
+    value: '-1',
+    label: '异常',
+    color: 'error'
   }
 ]
 
@@ -71,6 +73,18 @@ export default {
         page: 1,
         size: 10
       },
+      listgridButtons: [
+        {
+          render: (h) => (<Button on-click={ () => this.$refs.listgrid.selectAll() }>全选</Button>)
+        },
+        {
+          name: '删除',
+          type: 'error',
+          icon: 'md-sync',
+          onSelectionChange: (event, {selection, ids}) => console.info(selection, ids),
+          onClick: (event, {selection, ids}) => console.info(selection, ids)
+        }
+      ],
       configs: [
         {
           name: "",
@@ -154,6 +168,7 @@ export default {
             options: statusOpts
           },
           form: {
+            geType: 'radioGroup',
             options: statusOpts
           },
           render: (h, {row, column}) => (<GeTag value={ row[column.key] } options={ statusOpts } />)
@@ -444,7 +459,6 @@ export default {
     listen () {
       this.$on('recieve', ({ update, data, valid }) => {
         if(update){
-          console.info(data)
           API.update(data.id, data).then(this.createdOrUpdatedHandler)
         }else{
           API.create(data).then(this.createdOrUpdatedHandler)

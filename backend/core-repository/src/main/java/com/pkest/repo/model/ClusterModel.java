@@ -32,7 +32,7 @@ public class ClusterModel extends BaseModel {
     protected Date deletedAt;
 
     private String name;
-    private Integer status;
+    private String status;
     private String clusterMasterUrl;
     private String clusterUsername;
     private String clusterCertData;

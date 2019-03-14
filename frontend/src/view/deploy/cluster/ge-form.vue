@@ -155,6 +155,9 @@ export default {
       this.$refs.currentForm.validate((valid) => {
           callback(valid)
       })
+    },
+    resetFields(){
+      this.$refs.currentForm.resetFields()
     }
   }
 }

@@ -36,6 +36,11 @@ export default {
 
     }
   },
+  watch: {
+    initForm: function(value){
+      this.$refs.form.resetFields()
+    }
+  },
   created () {
     this.submit()
   },
