@@ -13,5 +13,19 @@ export default {
     return axios.request({
       url: MODULE_NAME + '/get/' + id
     })
+  },
+  create(data) {
+    return axios.request({
+      url: MODULE_NAME + '/create',
+      method: 'post',
+      data
+    })
+  },
+  update(id, data) {
+    return axios.request({
+      url: MODULE_NAME + '/update/' + id,
+      method: 'put',
+      data
+    })
   }
 }

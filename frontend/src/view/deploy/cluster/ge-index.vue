@@ -15,6 +15,9 @@
                 <Button type="primary" size="large" @click="formSubmitHandler">提交</Button>
             </div>
         </Modal>
+        <Drawer width="640" v-model="showModalView" :title="modalViewTitle">
+          <GeView :columns="viewConfig" :data="view"></GeView>
+        </Drawer>
     </card>
   </div>
 </template>
@@ -25,6 +28,7 @@ import emitter from 'iview/src/mixins/emitter'
 import GeDay from './ge-day'
 import GeTag from './ge-tag'
 import GeSearch from './ge-search'
+import GeView from './ge-view'
 import GeListgrid from './ge-listgrid'
 import GeModalForm from './ge-modal-form'
 import API from '@/api/cluster'
@@ -46,6 +50,7 @@ export default {
   components: {
     GeDay,
     GeTag,
+    GeView,
     GeSearch,
     GeListgrid,
     GeModalForm
@@ -53,6 +58,9 @@ export default {
   mixins: [emitter],
   data(){
     return {
+      view: {},
+      modalViewTitle: '',
+      showModalView: false,
       update: false,
       showModalForm: false,
       modalFormTitle: "",
@@ -76,7 +84,9 @@ export default {
           column: 'id',
           name: "ID",
           search: true,
-          form: false,
+          form: {
+            geType: 'hidden'
+          },
           listgrid: {
             fixed: 'left',
             maxWidth: 100,
@@ -94,12 +104,18 @@ export default {
         }
         ,{
           column: 'clusterMasterUrl',
-          name: "Master"
+          name: "Master",
+          form: {
+            rules: [{required: true, message: '该值不能为空', trigger: 'blur'}]
+          },
         }
         ,{
           column: 'clusterUsername',
           name: "用户名",
           search: true,
+          form: {
+            rules: [{required: true, message: '该值不能为空', trigger: 'blur'}]
+          },
           listgrid: {
             sortable: true
           }
@@ -107,11 +123,27 @@ export default {
         ,{
           column: 'clusterCertKey',
           name: "CertKey",
+          view: {
+            render: (h, {row, column}) => (<Input type="textarea" rows={10} value={ row[column.key] }/>)
+          },
+          form: {
+            type: 'textarea',
+            rows: 5,
+            rules: [{required: true, message: '该值不能为空', trigger: 'blur'}]
+          },
           listgrid: false
         }
         ,{
           column: 'clusterCertData',
           name: "CertData",
+          view: {
+            render: (h, {row, column}) => (<Input type="textarea" rows={10} value={ row[column.key] }/>)
+          },
+          form: {
+            type: 'textarea',
+            rows: 5,
+            rules: [{required: true, message: '该值不能为空', trigger: 'blur'}]
+          },
           listgrid: false
         }
         ,{
@@ -124,9 +156,7 @@ export default {
           form: {
             options: statusOpts
           },
-          listgrid: {
-            render: (h, {row, column}) => (<GeTag value={ row[column.key] } options={ statusOpts } />)
-          }
+          render: (h, {row, column}) => (<GeTag value={ row[column.key] } options={ statusOpts } />)
         }
         ,{
           column: 'creatorUid',
@@ -138,17 +168,15 @@ export default {
           column: 'createdAt',
           name: "创建时间",
           form: false,
-          listgrid: {
-            render:  (h, {row, column}) => (<GeDay value={ row[column.key] }/>)
-          }
+          render: (h, {row, column}) => (<GeDay value={ row[column.key] }/>)
         }
         ,{
           column: 'updatedAt',
           name: "更新时间",
           form: false,
+          render: (h, {row, column}) => (<GeDay value={ row[column.key] }/>),
           listgrid: {
-            show: false,
-            render:  (h, {row, column}) => (<GeDay value={ row[column.key] }/>)
+            show: false
           }
         }
         ,{
@@ -167,7 +195,7 @@ export default {
             width: 180,
             render: (h, {row}) => (
               <div>
-                <Button size="small" style="margin-right:5px">查看</Button>
+                <Button size="small" style="margin-right:5px" on-click={ () => this.viewHandler(row) }>查看</Button>
                 <Button size="small" style="margin-right:5px" on-click={ () => this.updateHandler(row) }>更新</Button>
                 <Button size="small" style="margin-right:5px" type="error">删除</Button>
               </div>
@@ -288,13 +316,29 @@ export default {
 
   },
   computed: {
+    viewConfig(){
+      let columns = []
+      this.configs.map((config, index) => {
+        if(config.view !== false && config.column){
+          columns.push(_.defaultsDeep({}, config.view, {
+            key: config.column,
+            title: config.name,
+            render: config.render,
+            renderHeader: config.renderHeader
+          }))
+        }
+      })
+      return columns
+    },
     listgridConfig(){
       let columns = []
       this.configs.map((config, index) => {
         if(config.listgrid !== false){
           columns.push(_.defaultsDeep({}, config.listgrid, {
             key: config.column,
-            title: config.name
+            title: config.name,
+            render: config.render,
+            renderHeader: config.renderHeader
           }))
         }
       })
@@ -370,6 +414,11 @@ export default {
       this.initForm = {}
       this.showModalForm = true
     },
+    viewHandler(row){
+      this.view = row
+      this.modalViewTitle = "查看: [ " + (row.name || row.id) + " ]"
+      this.showModalView = true
+    },
     updateHandler(row){
       this.update = true
       this.modalFormTitle = "更新: [ " + (row.name || row.id) + " ]"
@@ -382,10 +431,24 @@ export default {
     formSubmitHandler(){
       this.broadcast('GeModalForm', 'submit')
     },
+    createdOrUpdatedHandler({status, message, data}){
+      if(status == 0){
+        this.showModalForm = false
+        this.$Message.destroy()
+        this.$Message.success(message);
+        this.list()
+      }else{
+        this.$Message.error({content: message, duration: 30, closable: true});
+      }
+    },
     listen () {
       this.$on('recieve', ({ update, data, valid }) => {
-        this.showModalForm = false
-        console.info(update, data, valid )
+        if(update){
+          console.info(data)
+          API.update(data.id, data).then(this.createdOrUpdatedHandler)
+        }else{
+          API.create(data).then(this.createdOrUpdatedHandler)
+        }
       })
     }
   }
