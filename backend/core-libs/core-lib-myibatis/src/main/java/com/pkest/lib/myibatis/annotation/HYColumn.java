@@ -18,6 +18,7 @@ public @interface HYColumn {
     boolean insertable() default true;
     boolean updatable() default true;
     boolean invisible() default false;
+    boolean sortable() default true;
     boolean pk() default false;
 }
 

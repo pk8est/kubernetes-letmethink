@@ -2,6 +2,8 @@
     <div>
       <Table ref="currentTable" :columns="showColumns" :data="data" v-bind="$attrs"
       @on-sort-change="sortChangeHandler"
+      @on-select="selectHandler"
+      @on-select-all="selectAllHandler"
       @on-selection-change="selectionChangeHandler"
       v-on="on" />
       <Row style="margin-top: 15px">
@@ -104,6 +106,12 @@ export default {
     selectAll(){
       this.selectOn = !this.selectOn
       this.$refs.currentTable.selectAll(this.selectOn)
+    },
+    selectHandler(selection, row){
+      this.emitEvents(this.buttons, 'onSelect', { selection, row })
+    },
+    selectAllHandler(selection){
+      this.emitEvents(this.buttons, 'onSelectAll', { selection })
     },
     selectionChangeHandler(selection){
       this.selection = selection

@@ -3,7 +3,6 @@ package com.pkest.lib.myibatis;
 import com.pkest.lib.myibatis.annotation.HYColumn;
 import com.pkest.lib.myibatis.annotation.HYTable;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.scripting.LanguageDriver;
@@ -37,8 +36,6 @@ public class HYLanguageDriver extends XMLLanguageDriver implements LanguageDrive
 
     @Override
     public ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql){
-        KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
-        mappedStatement.getKeyProperties();
         return super.createParameterHandler(mappedStatement, parameterObject, boundSql);
     }
 
@@ -306,6 +303,13 @@ public class HYLanguageDriver extends XMLLanguageDriver implements LanguageDrive
                             "</foreach>" +
                             " \\${where.getGroupBy()}" +
                             " \\${where.getHaving()}" +
+
+                           /* "<if test=\"where.getSortable()\">" +
+                            "<foreach collection=\"where.getSortable()\" item=\"sort\" open=\" ORDER BY \" separator=\",\">" +
+                            "\\${sort.getProperty()} \\${sort.getDirection()}" +
+                            "</foreach>" +
+                            "</if>" +*/
+
                             " \\${where.getSortDescribe()}" +
                             " \\${where.getPageDescribe()}"
             );
