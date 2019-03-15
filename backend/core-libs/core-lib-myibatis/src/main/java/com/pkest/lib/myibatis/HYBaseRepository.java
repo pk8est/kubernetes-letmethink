@@ -21,6 +21,10 @@ public interface HYBaseRepository<T, K> {
     K insert(T model);
 
     @Lang(HYLanguageDriver.class)
+    @Insert({"<script>", "INSERT INTO @{table}(@{batchInsertField}) VALUES @{batchInsertValue}", "</script>"})
+    K batchInsert(@Param("list") List<T> list);
+
+    @Lang(HYLanguageDriver.class)
     @Update({"<script>", "UPDATE @{table} SET @{updateSet} WHERE @{id} LIMIT 1", "</script>"})
     K update(T model);
 

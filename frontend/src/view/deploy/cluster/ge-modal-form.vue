@@ -9,11 +9,12 @@
 <script>
 import _ from 'lodash'
 import emitter from 'iview/src/mixins/emitter'
+import GeMixin from './ge-mixin'
 import GeForm from './ge-form'
 export default {
   name: 'GeModalForm',
   components: { GeForm },
-  mixins: [emitter],
+  mixins: [emitter, GeMixin],
   props: {
       value: {
           default: () => false

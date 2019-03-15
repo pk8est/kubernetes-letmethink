@@ -30,6 +30,8 @@ public class HYLanguageDriver extends XMLLanguageDriver implements LanguageDrive
     public static String fieldsPlaceholder = "@{field}";
     public static String insertFieldPlaceholder = "@{insertField}";
     public static String insertValuePlaceholder = "@{insertValue}";
+    public static String batchInsertFieldPlaceholder = "@{batchInsertField}";
+    public static String batchInsertValuePlaceholder = "@{batchInsertValue}";
     public static String updateSetPlaceholder = "@{updateSet}";
     public static String conditionPlaceholder = "@{where}";
 
@@ -59,6 +61,8 @@ public class HYLanguageDriver extends XMLLanguageDriver implements LanguageDrive
         script = setField(script, mapperClass, modelClass, idClass, resultMap);
         script = setInsertField(script, mapperClass, modelClass, idClass, resultMap);
         script = setInsertValue(script, mapperClass, modelClass, idClass, resultMap);
+        script = setBatchInsertField(script, mapperClass, modelClass, idClass, resultMap);
+        script = setBatchInsertValue(script, mapperClass, modelClass, idClass, resultMap);
         script = setUpdateSet(script, mapperClass, modelClass, idClass, resultMap);
         script = setCondition(script, mapperClass, modelClass, idClass, resultMap);
 
@@ -209,6 +213,43 @@ public class HYLanguageDriver extends XMLLanguageDriver implements LanguageDrive
             }
             fieldsBuilder.append("</trim>");
             script = script.replace(insertValuePlaceholder, fieldsBuilder.toString());
+        }
+        return script;
+    }
+
+    private String setBatchInsertField(String script, Class<?> mapperClass, Class<?> modelClass, Class<?> idClass, ResultMap resultMap) {
+        if (script.contains(batchInsertFieldPlaceholder)) {
+            StringBuilder builder = new StringBuilder("<trim prefixOverrides=\",\">");
+            Field[] fields = modelClass.getDeclaredFields();
+            for(Field field: fields){
+                HYColumn column = field.getAnnotation(HYColumn.class);
+                if(column == null || (column.invisible() == false && column.insertable())){
+                    builder.append(",`"+getColumnName(field)+"`");
+                }
+            }
+            builder.append("</trim>");
+            script = script.replace(batchInsertFieldPlaceholder, builder.toString());
+        }
+        return script;
+    }
+
+    private String setBatchInsertValue(String script, Class<?> mapperClass, Class<?> modelClass, Class<?> idClass, ResultMap resultMap) {
+        if (script.contains(batchInsertValuePlaceholder)) {
+            String fieldName;
+            StringBuilder builder = new StringBuilder();
+            builder.append("<foreach collection =\"list\" item=\"item\" index= \"index\" separator =\",\">(");
+            builder.append("<trim prefixOverrides=\",\">");
+            Field[] fields = modelClass.getDeclaredFields();
+            for(Field field: fields){
+                HYColumn column = field.getAnnotation(HYColumn.class);
+                if(column == null || (column.invisible() == false && column.insertable())){
+                    fieldName = getPropertyName(field);
+                    builder.append(",#{item."+fieldName+"}");
+                }
+            }
+            builder.append("</trim>");
+            builder.append(")</foreach>");
+            script = script.replace(batchInsertValuePlaceholder, builder.toString());
         }
         return script;
     }

@@ -16,9 +16,11 @@
 <script>
 import _ from 'lodash'
 import GeForm from './ge-form'
+import GeMixin from './ge-mixin'
 export default {
   name: 'GeSearch',
   components: { GeForm },
+  mixins: [GeMixin],
   props: {
       columns: {
           default: () => []

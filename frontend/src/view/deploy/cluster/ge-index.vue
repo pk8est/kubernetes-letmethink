@@ -81,8 +81,12 @@ export default {
           name: '删除',
           type: 'error',
           icon: 'md-sync',
-          onSelectionChange: (event, {selection, ids}) => console.info(selection, ids),
-          onClick: (event, {selection, ids}) => console.info(selection, ids)
+          //autoDisabled: false,
+          onSelectionChange: ({selection, ids}) => console.info(selection, ids),
+          onClick: (event, {selection, ids}) => {
+            this.showModalView = true
+            console.info(selection, ids)
+          }
         }
       ],
       configs: [

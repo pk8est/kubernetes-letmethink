@@ -9,7 +9,7 @@
           v-else-if="full || column.hide != true"
           v-bind="column.labelProps"
           v-on="column.labelOn" >
-            <slot :name="'slot-form-label-' + index" v-if="typeof column.label == 'function'">{{ renderItem(column.label, 'slot-form-label-' + index) }}</slot>
+            <slot :name="'slot-form-label-' + index" v-if="typeof column.label == 'function'">{{ renderSlot(column.label, 'slot-form-label-' + index) }}</slot>
 
             <Select v-model="form[column.column]" v-if="(!column.geType || column.geType=='select') && column.options" :element-id="column.column"
               v-bind="bindColumn(column)"
@@ -19,7 +19,7 @@
                   :disabled="option.disabled"
                   v-bind="option"
                   v-on="option.on">
-                    <slot :name="'slot-form-item-' + index + '-' + i">{{ renderItem(option.label, 'slot-form-item-' + index + '-' + i, option, index) }}</slot>
+                    <slot :name="'slot-form-item-' + index + '-' + i">{{ renderSlot(option.label, 'slot-form-item-' + index + '-' + i, option, index) }}</slot>
                 </Option>
             </Select>
 
@@ -40,7 +40,7 @@
                 <Radio v-for="(option, i) in column.options"
                   v-bind="option"
                   v-on="option.on">
-                  <slot :name="'slot-form-item-' + index + '-' + i">{{ renderItem(option.label != undefined ? option.label : option.value, 'slot-form-item-' + index + '-' + i) }}</slot>
+                  <slot :name="'slot-form-item-' + index + '-' + i">{{ renderSlot(option.label != undefined ? option.label : option.value, 'slot-form-item-' + index + '-' + i) }}</slot>
               </Radio>
             </RadioGroup>
 
@@ -57,7 +57,7 @@
                   :label="option.value"
                   v-bind="option"
                   v-on="option.on">
-                  <slot :name="'slot-form-item-' + index + '-' + i">{{ renderItem(option.label != undefined ? option.label : option.value, 'slot-form-item-' + index + '-' + i) }}</slot>
+                  <slot :name="'slot-form-item-' + index + '-' + i">{{ renderSlot(option.label != undefined ? option.label : option.value, 'slot-form-item-' + index + '-' + i) }}</slot>
                 </Checkbox>
             </CheckboxGroup>
 
@@ -65,8 +65,8 @@
               v-bind="bindColumn(column)"
               :disabled="isDisabled(column)"
               v-on="column.on">
-              <span slot="open"><slot :name="'slot-form-item-switch-open-' + index">{{ renderItem(column.open != undefined ? column.open : '开', 'slot-form-item-switch-open-' + index) }}</slot></span>
-              <span slot="close"><slot :name="'slot-form-item-switch-close-' + index">{{ renderItem(column.close != undefined ? column.close : '关', 'slot-form-item-switch-close-' + index) }}</slot></span>
+              <span slot="open"><slot :name="'slot-form-item-switch-open-' + index">{{ renderSlot(column.open != undefined ? column.open : '开', 'slot-form-item-switch-open-' + index) }}</slot></span>
+              <span slot="close"><slot :name="'slot-form-item-switch-close-' + index">{{ renderSlot(column.close != undefined ? column.close : '关', 'slot-form-item-switch-close-' + index) }}</slot></span>
             </i-switch>
 
             <AutoComplete v-model="form[column.column]" v-else-if="column.geType=='autoComplete'" :element-id="column.column"
@@ -74,7 +74,7 @@
              :disabled="isDisabled(column)"
              v-on="column.on">
              <Option v-for="(item, i) in column.data" :value="item" :key="item" >
-               <slot :name="'slot-form-item-' + index + '-' + i">{{ renderItem((column.template != undefined ? column.template : item), 'slot-form-item-' + index + '-' + i, item, index) }}</slot>
+               <slot :name="'slot-form-item-' + index + '-' + i">{{ renderSlot((column.template != undefined ? column.template : item), 'slot-form-item-' + index + '-' + i, item, index) }}</slot>
              </Option>
            </AutoComplete>
         </FormItem>
@@ -86,9 +86,11 @@
 
 <script>
 import _ from 'lodash'
+import GeMixin from './ge-mixin'
 export default {
   name: 'GeForm',
   components: {},
+  mixins: [GeMixin],
   props: {
     full: true,
     columns: {
@@ -141,9 +143,6 @@ export default {
 
       })
       return form
-    },
-    renderItem(fn, name, ...args){
-      this.$slots[name] = typeof fn == 'function' ? fn(this.$createElement, ...args) : fn
     },
     bindColumn(column){
       return _.omit(column, ['label', 'column', 'options'])

@@ -17,9 +17,10 @@
         </Col>
         <Col span="12" pull="12" class="button-row">
           <span v-for="(button, index) in buttons">
-            <slot v-if="button.render" :name="'button-' + index">{{ renderItem(button.render, 'button-' + index) }}</slot>
+            <slot v-if="button.render" :name="'button-' + index">{{ renderSlot(button.render, 'button-' + index) }}</slot>
             <Button v-else :type="button.type"
-              @click="selectionButtonClickHandler"
+              :disabled="button.autoDisabled !== false && selectionIds.length == 0"
+              @click="(event) => emitEvents(buttons, 'onClick', event, { selection, ids: selectionIds })"
               ><Icon :type="button.icon" v-if="button.icon" size="14"/> {{button.name}} </Button>
           </span>
         </Col>
@@ -32,9 +33,13 @@
 </template>
 
 <script>
+
+import GeMixin from './ge-mixin'
+
 export default {
   name: 'GeListgrid',
   components: { },
+  mixins: [GeMixin],
   props: {
       columns: {
           default: () => []
@@ -69,6 +74,9 @@ export default {
       return this.columns.filter((column) => {
         return !this.setting[column.key] || this.setting[column.key].show == true
       })
+    },
+    selectionIds(){
+      return this.selection.map(item => item.id)
     }
   },
   methods: {
@@ -93,28 +101,15 @@ export default {
     pageSizeChangeHandler(size){
       this.$emit("page-size-change", size)
     },
-    renderItem(fn, name, ...args){
-      this.$slots[name] = typeof fn == 'function' ? fn(this.$createElement, ...args) : fn
-    },
     selectAll(){
       this.selectOn = !this.selectOn
       this.$refs.currentTable.selectAll(this.selectOn)
     },
     selectionChangeHandler(selection){
       this.selection = selection
-      for(let button of this.buttons){
-        if(button.onSelectionChange){
-          button.onSelectionChange(event, { selection: this.selection, ids: this.selection.map((item) => item.id) })
-        }
-      }
+      this.emitEvents(this.buttons, 'onSelectionChange', { selection: this.selection, ids: this.selectionIds })
     },
-    selectionButtonClickHandler(event){
-      for(let button of this.buttons){
-        if(button.onClick){
-          button.onClick(event, { selection: this.selection, ids: this.selection.map((item) => item.id) })
-        }
-      }
-    }
+
   }
 }
 </script>
