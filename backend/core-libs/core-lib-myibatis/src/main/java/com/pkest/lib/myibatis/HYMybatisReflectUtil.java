@@ -1,5 +1,8 @@
 package com.pkest.lib.myibatis;
 
+import com.pkest.lib.myibatis.annotation.HYColumn;
+import org.apache.commons.lang3.StringUtils;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -37,5 +40,33 @@ public class HYMybatisReflectUtil {
             fields.add(field);
         }
         return fields.toArray(new Field[0]);
+    }
+
+    public static String getColumnName(Field field) {
+        HYColumn column = field.getAnnotation(HYColumn.class);
+        if(column == null || StringUtils.isBlank(column.value())){
+            return toUnderline(field.getName());
+        }else{
+            return column.value();
+        }
+    }
+
+    public static String getPropertyName(Field field) {
+        return field.getName();
+    }
+
+
+    public static String toUnderline(String str) {
+        StringBuilder buf = new StringBuilder();
+        buf.append(Character.toLowerCase(str.charAt(0)));
+        for (int i = 1; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (Character.isUpperCase(c)) {
+                buf.append("_" + Character.toLowerCase(c));
+            } else {
+                buf.append(c);
+            }
+        }
+        return buf.toString();
     }
 }

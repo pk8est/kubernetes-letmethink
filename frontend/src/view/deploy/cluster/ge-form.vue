@@ -39,6 +39,7 @@
               v-on="column.on">
                 <Radio v-for="(option, i) in column.options"
                   v-bind="option"
+                  :label="option.value"
                   v-on="option.on">
                   <slot :name="'slot-form-item-' + index + '-' + i">{{ renderSlot(option.label != undefined ? option.label : option.value, 'slot-form-item-' + index + '-' + i) }}</slot>
               </Radio>
@@ -77,6 +78,7 @@
                <slot :name="'slot-form-item-' + index + '-' + i">{{ renderSlot((column.template != undefined ? column.template : item), 'slot-form-item-' + index + '-' + i, item, index) }}</slot>
              </Option>
            </AutoComplete>
+
         </FormItem>
       </template>
       <slot></slot>

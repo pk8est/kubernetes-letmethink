@@ -22,7 +22,7 @@
             <slot v-if="button.render" :name="'button-' + index">{{ renderSlot(button.render, 'button-' + index) }}</slot>
             <Button v-else :type="button.type"
               :disabled="button.autoDisabled !== false && selectionIds.length == 0"
-              @click="(event) => emitEvents(buttons, 'onClick', event, { selection, ids: selectionIds })"
+              @click="(event) => emitEvent(button, 'onClick', event, { selection, ids: selectionIds })"
               ><Icon :type="button.icon" v-if="button.icon" size="14"/> {{button.name}} </Button>
           </span>
         </Col>

@@ -94,7 +94,7 @@ public class HYLanguageDriver extends XMLLanguageDriver implements LanguageDrive
             }else if(annotation != null && StringUtils.isNotBlank(annotation.value())) {
                 tableName = annotation.value();
             }else {
-                tableName = toUnderline(modelClass.getSimpleName());
+                tableName = HYMybatisReflectUtil.toUnderline(modelClass.getSimpleName());
             }
             script = script.replace(tablePlaceholder, tableName);
         }
@@ -129,7 +129,7 @@ public class HYLanguageDriver extends XMLLanguageDriver implements LanguageDrive
         if (resultMapping != null) {
             idName = resultMapping.getColumn();
         }else if(idField != null){
-            idName = toUnderline(idField.getName());
+            idName = HYMybatisReflectUtil.toUnderline(idField.getName());
         }else {
             idName = "id";
         }
@@ -163,7 +163,7 @@ public class HYLanguageDriver extends XMLLanguageDriver implements LanguageDrive
                 }
                 HYColumn column = field.getAnnotation(HYColumn.class);
                 if(column == null || (column.invisible() == false)){
-                    fieldsBuilder.append("`").append(getColumnName(field)).append("`,");
+                    fieldsBuilder.append("`").append(HYMybatisReflectUtil.getColumnName(field)).append("`,");
                 }
             }
             String fieldsName = fieldsBuilder.toString();
@@ -184,7 +184,9 @@ public class HYLanguageDriver extends XMLLanguageDriver implements LanguageDrive
                 }
                 HYColumn column = field.getAnnotation(HYColumn.class);
                 if(column == null || (column.invisible() == false && column.insertable())){
-                    fieldsBuilder.append("<if test=\""+getPropertyName(field)+"!=null\">,`"+getColumnName(field)+"`</if>");
+                    fieldsBuilder.append("<if test=\""+
+                            HYMybatisReflectUtil.getPropertyName(field)+"!=null\">,`"+
+                            HYMybatisReflectUtil.getColumnName(field)+"`</if>");
                 }
             }
             fieldsBuilder.append("</trim>");
@@ -204,7 +206,7 @@ public class HYLanguageDriver extends XMLLanguageDriver implements LanguageDrive
                 }
                 HYColumn column = field.getAnnotation(HYColumn.class);
                 if(column == null || (column.invisible() == false && column.insertable())){
-                    fieldName = getPropertyName(field);
+                    fieldName = HYMybatisReflectUtil.getPropertyName(field);
                     fieldsBuilder.append("<if test=\""+fieldName+"!=null\">,#{"+fieldName+"}</if>");
                 }
             }
@@ -221,7 +223,7 @@ public class HYLanguageDriver extends XMLLanguageDriver implements LanguageDrive
             for(Field field: fields){
                 HYColumn column = field.getAnnotation(HYColumn.class);
                 if(column == null || (column.invisible() == false && column.insertable())){
-                    builder.append(",`"+getColumnName(field)+"`");
+                    builder.append(",`"+HYMybatisReflectUtil.getColumnName(field)+"`");
                 }
             }
             builder.append("</trim>");
@@ -240,7 +242,7 @@ public class HYLanguageDriver extends XMLLanguageDriver implements LanguageDrive
             for(Field field: fields){
                 HYColumn column = field.getAnnotation(HYColumn.class);
                 if(column == null || (column.invisible() == false && column.insertable())){
-                    fieldName = getPropertyName(field);
+                    fieldName = HYMybatisReflectUtil.getPropertyName(field);
                     builder.append(",#{item."+fieldName+"}");
                 }
             }
@@ -264,7 +266,10 @@ public class HYLanguageDriver extends XMLLanguageDriver implements LanguageDrive
                 }
                 HYColumn column = field.getAnnotation(HYColumn.class);
                 if(column == null || (column.invisible() == false && column.updatable() && column.pk() == false)){
-                    fieldsBuilder.append("<if test=\""+getPropertyName(field)+"!=null\">,`"+getColumnName(field)+"`=#{"+getPropertyName(field)+"}</if>");
+                    fieldsBuilder.append("<if test=\""+
+                            HYMybatisReflectUtil.getPropertyName(field)+"!=null\">,`"+
+                            HYMybatisReflectUtil.getColumnName(field)+"`=#{"+
+                            HYMybatisReflectUtil.getPropertyName(field)+"}</if>");
                 }
             }
             fieldsBuilder.append("</trim>");
@@ -353,32 +358,6 @@ public class HYLanguageDriver extends XMLLanguageDriver implements LanguageDrive
         }
     }
 
-    private String getColumnName(Field field) {
-        HYColumn column = field.getAnnotation(HYColumn.class);
-        if(column == null || StringUtils.isBlank(column.value())){
-            return toUnderline(field.getName());
-        }else{
-            return column.value();
-        }
-    }
 
-    private String getPropertyName(Field field) {
-        return field.getName();
-    }
-
-
-    private String toUnderline(String str) {
-        StringBuilder buf = new StringBuilder();
-        buf.append(Character.toLowerCase(str.charAt(0)));
-        for (int i = 1; i < str.length(); i++) {
-            char c = str.charAt(i);
-            if (Character.isUpperCase(c)) {
-                buf.append("_" + Character.toLowerCase(c));
-            } else {
-                buf.append(c);
-            }
-        }
-        return buf.toString();
-    }
 
 }

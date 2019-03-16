@@ -85,8 +85,26 @@ public class CompareBuilder extends LinkedHashMap<CompareBuilder.CompareField, O
         }
     }
 
-    public void setSortable(Sort sortable) {
+    public CompareBuilder setSortable(Sort sortable) {
         this.sortable = sortable;
+        return this;
+    }
+
+    public CompareBuilder setSortable(Sort sortable, Map<String, String> fields) {
+        if(sortable == null){
+            this.sortable = sortable;
+        }else{
+            List<Sort.Order> orders = Lists.newArrayList();
+            Iterator<Sort.Order> iterator = sortable.iterator();
+            while (iterator.hasNext()){
+                Sort.Order order = iterator.next();
+                if(fields.containsKey(order.getProperty())){
+                    orders.add(new Sort.Order(order.getDirection(), fields.get(order.getProperty())));
+                }
+            }
+            this.sortable = new Sort(orders);
+        }
+        return this;
     }
 
     public String getGroupBy() {

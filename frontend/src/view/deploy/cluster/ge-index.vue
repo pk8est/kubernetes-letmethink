@@ -87,7 +87,11 @@ export default {
             this.showModalView = true
             console.info(selection, ids)
           }
-        }
+        },
+    {
+      name: "查看"
+    }
+
       ],
       configs: [
         {

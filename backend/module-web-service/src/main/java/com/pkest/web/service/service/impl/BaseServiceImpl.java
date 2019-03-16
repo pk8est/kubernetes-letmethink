@@ -6,6 +6,8 @@ import com.pkest.common.bean.PageInfo;
 import com.pkest.common.exception.HYException;
 import com.pkest.common.exception.RecordNotFoundException;
 import com.pkest.lib.myibatis.CompareBuilder;
+import com.pkest.lib.myibatis.HYMybatisReflectUtil;
+import com.pkest.lib.myibatis.annotation.HYColumn;
 import com.pkest.repo.mapper.BaseMapper;
 import com.pkest.repo.model.BaseModel;
 import com.pkest.util.HYPropertyUtils;
@@ -15,10 +17,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by wuzhonggui on 2018/11/27.
@@ -30,6 +32,7 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
     final static String DELETE_FIELD_KEY = "deleteStatus";
     final static String DELETEAT_FIELD_KEY = "deletedAt";
     final static String ID_KEY = "id";
+    private Map<String, String> tableColumnMaps = null;
 
     K mapper;
 
@@ -40,6 +43,33 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
 
     public Class<T> getModelClass(){
         return (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
+    public Map<String, String> getTableColumns(){
+        if(tableColumnMaps == null){
+            synchronized (this){
+                if(tableColumnMaps == null){
+                    this.tableColumnMaps = new HashMap<>();
+                    for(Field field: getModelClass().getDeclaredFields()){
+                        if(Modifier.isStatic(field.getModifiers())){
+                            continue;
+                        }
+                        HYColumn column = field.getAnnotation(HYColumn.class);
+                        if(column == null || (column.invisible() == false)){
+                            tableColumnMaps.put(field.getName(), HYMybatisReflectUtil.getColumnName(field));
+                        }
+                    }
+                }
+            }
+        }
+        return this.tableColumnMaps;
+    }
+
+    public String getTableColumn(String name){
+        if(getTableColumns().containsKey(name)){
+            return getTableColumns().get(name);
+        }
+        return null;
     }
 
     @Override
@@ -58,7 +88,7 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
     }
 
     @Override
-    public T getOrFail(long id) throws HYException{
+    public T getOrFail(long id) throws HYException {
         return GeFind(id).orElseThrow(new RecordNotFoundException(
                 String.format("%s: id is %s model not fount!", getModelClass().getName(), id)
         ));
@@ -81,7 +111,7 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
 
     @Override
     public Optional<T> GeFind(CompareBuilder compareBuilder, boolean filterDeleteStatus){
-        if(filterDeleteStatus) compareBuilder.filter(HYStringUtils.toUnderline(DELETE_FIELD_KEY), 0);
+        if(filterDeleteStatus) compareBuilder.filter(getTableColumn(DELETE_FIELD_KEY), 0);
         return Optional.ofNullable((T)getMapper().findOne(compareBuilder));
     }
 
@@ -92,7 +122,7 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
 
     @Override
     public List<T> GeFindAll(CompareBuilder compareBuilder, boolean filterDeleteStatus){
-        if(filterDeleteStatus) compareBuilder.filter(HYStringUtils.toUnderline(DELETE_FIELD_KEY), 0);
+        if(filterDeleteStatus) compareBuilder.filter(getTableColumn(DELETE_FIELD_KEY), 0);
         return getMapper().findAll(compareBuilder);
     }
 
@@ -110,7 +140,7 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
     public PageInfo<T> GePagination(CompareBuilder builder, Pageable pageable, boolean filterDeleteStatus){
         if(filterDeleteStatus) builder.filter(HYStringUtils.toUnderline(DELETE_FIELD_KEY), 0);
         PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize(), true);
-        builder.setSortable(pageable.getSort());
+        builder.setSortable(pageable.getSort(), getTableColumns());
         return new PageInfo(getMapper().findAll(builder));
     }
 
@@ -144,7 +174,7 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
     @Override
     public Long GeDelete(Long id, boolean virtual){
         if(virtual){
-            return (Long)getMapper().updateOne(ImmutableMap.of(ID_KEY, id, HYStringUtils.toCamel(DELETE_FIELD_KEY),1, DELETEAT_FIELD_KEY, new Date()));
+            return (Long)getMapper().updateOne(ImmutableMap.of(ID_KEY, id, DELETE_FIELD_KEY,1, DELETEAT_FIELD_KEY, new Date()));
         }else{
             return (Long)getMapper().delete(id);
         }
