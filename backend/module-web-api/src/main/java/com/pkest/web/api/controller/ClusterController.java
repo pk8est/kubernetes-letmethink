@@ -22,8 +22,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * Created by wuzhonggui on 2019/1/21.
  * QQ: 2731429978
@@ -49,7 +47,7 @@ public class ClusterController extends BaseController<ClusterService> {
     @ApiOperation(value="列表")
     @Sortable({"id", "createdAt"})
     @Searchable(value = {"id", "name"})
-    public ResponseBean<PageInfo<ClusterModel>> list(@RequestParam(value = "name[]", required = false) List<String> name, QueryBuilder builder, Pageable pageable) throws HYException{
+    public ResponseBean<PageInfo<ClusterModel>> list(QueryBuilder builder, Pageable pageable) throws HYException{
         return ResultCode.SUCCESS.wrap(getService().GePagination(builder, pageable));
     }
 
