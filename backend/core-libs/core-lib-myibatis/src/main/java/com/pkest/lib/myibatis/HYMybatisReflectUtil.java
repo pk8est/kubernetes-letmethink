@@ -57,6 +57,7 @@ public class HYMybatisReflectUtil {
 
 
     public static String toUnderline(String str) {
+        if(StringUtils.isBlank(str)) return str;
         StringBuilder buf = new StringBuilder();
         buf.append(Character.toLowerCase(str.charAt(0)));
         for (int i = 1; i < str.length(); i++) {

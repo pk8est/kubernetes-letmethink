@@ -7,9 +7,11 @@ import com.pkest.common.exception.HYException;
 import com.pkest.common.interfaces.Insert;
 import com.pkest.common.interfaces.Save;
 import com.pkest.common.interfaces.Update;
-import com.pkest.lib.myibatis.CompareBuilder;
+import com.pkest.lib.myibatis.QueryBuilder;
 import com.pkest.repo.model.ClusterModel;
 import com.pkest.web.api.annotation.ApiPageable;
+import com.pkest.web.api.annotation.Searchable;
+import com.pkest.web.api.annotation.Sortable;
 import com.pkest.web.api.request.ClusterBody;
 import com.pkest.web.service.service.ClusterService;
 import io.swagger.annotations.Api;
@@ -19,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Created by wuzhonggui on 2019/1/21.
@@ -43,8 +47,9 @@ public class ClusterController extends BaseController<ClusterService> {
     @GetMapping("/list")
     @ApiPageable
     @ApiOperation(value="列表")
-    public ResponseBean<PageInfo<ClusterModel>> list(Pageable pageable) throws HYException{
-        CompareBuilder builder = new CompareBuilder();
+    @Sortable({"id", "createdAt"})
+    @Searchable(value = {"id", "name"})
+    public ResponseBean<PageInfo<ClusterModel>> list(@RequestParam(value = "name[]", required = false) List<String> name, QueryBuilder builder, Pageable pageable) throws HYException{
         return ResultCode.SUCCESS.wrap(getService().GePagination(builder, pageable));
     }
 
@@ -62,6 +67,7 @@ public class ClusterController extends BaseController<ClusterService> {
     public ResponseBean<ClusterModel> update(@PathVariable("id") long id,
                                      @RequestBody @Validated({Update.class, Save.class}) ClusterBody body)
             throws HYException{
+
         return ResultCode.SUCCESS.wrap(getService().update(id, body.toDto(ClusterModel.class)));
     }
 

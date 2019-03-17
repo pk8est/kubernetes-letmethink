@@ -58,40 +58,40 @@ public interface HYBaseRepository<T, K> {
 
     @Lang(HYLanguageDriver.class)
     @Select({"<script>", "SELECT @{field} FROM @{table} WHERE @{where} LIMIT 1", "</script>"})
-    T findOne(@Param("where") CompareBuilder compare);
+    T findOne(@Param("where") QueryBuilder builder);
 
     @Lang(HYLanguageDriver.class)
     @Select({"<script>", "SELECT @{field} FROM @{table} WHERE @{where} LIMIT 1", "</script>"})
-    Map findOneMap(@Param("where") CompareBuilder compare);
+    Map findOneMap(@Param("where") QueryBuilder builder);
 
     @Lang(HYLanguageDriver.class)
     @Select({"<script>", "SELECT ${field} FROM @{table} WHERE @{where} LIMIT 1", "</script>"})
-    T findOneWithField(@Param("where") CompareBuilder compare, @Param("field") String field);
+    T findOneWithField(@Param("where") QueryBuilder builder, @Param("field") String field);
 
     @Lang(HYLanguageDriver.class)
     @Select({"<script>", "SELECT ${field} FROM @{table} WHERE @{where} LIMIT 1", "</script>"})
-    Map findOneWithFieldMap(@Param("where") CompareBuilder compare, @Param("field") String field);
+    Map findOneWithFieldMap(@Param("where") QueryBuilder builder, @Param("field") String field);
 
     @Lang(HYLanguageDriver.class)
     @Select({"<script>", "SELECT @{field} FROM @{table} WHERE @{where}", "</script>"})
-    List<T> findAll(@Param("where") CompareBuilder compare);
+    List<T> findAll(@Param("where") QueryBuilder builder);
 
     @Lang(HYLanguageDriver.class)
     @Select({"<script>", "SELECT @{field} FROM @{table} WHERE @{where}", "</script>"})
-    List<Map> findAllMap(@Param("where") CompareBuilder compare);
+    List<Map> findAllMap(@Param("where") QueryBuilder builder);
 
     @Lang(HYLanguageDriver.class)
     @Select({"<script>", "SELECT ${field} FROM @{table} WHERE @{where}", "</script>"})
-    List<T> findAllWithField(@Param("where") CompareBuilder compare, @Param("field") String field);
+    List<T> findAllWithField(@Param("where") QueryBuilder builder, @Param("field") String field);
 
     @Lang(HYLanguageDriver.class)
     @Select({"<script>", "SELECT ${field} FROM @{table} WHERE @{where}", "</script>"})
-    List<Map> findAllWithFieldMap(@Param("where") CompareBuilder compare, @Param("field") String field);
+    List<Map> findAllWithFieldMap(@Param("where") QueryBuilder builder, @Param("field") String field);
 
 
     @Lang(HYLanguageDriver.class)
     @Select({"<script>", "SELECT count(1) FROM @{table} WHERE @{where}", "</script>"})
-    K count(@Param("where") CompareBuilder compare);
+    K count(@Param("where") QueryBuilder builder);
 
     @Lang(HYLanguageDriver.class)
     @Delete({"<script>", "DELETE FROM @{table} WHERE @{idField}=#{id} LIMIT 1", "</script>"})
@@ -99,10 +99,10 @@ public interface HYBaseRepository<T, K> {
 
     @Lang(HYLanguageDriver.class)
     @Delete({"<script>", "DELETE FROM @{table} WHERE @{where} LIMIT 1", "</script>"})
-    K deleteOne(@Param("where") CompareBuilder compare);
+    K deleteOne(@Param("where") QueryBuilder builder);
 
     @Lang(HYLanguageDriver.class)
     @Delete({"<script>", "DELETE FROM @{table} WHERE @{where}", "</script>"})
-    K deleteAll(@Param("where") CompareBuilder compare);
+    K deleteAll(@Param("where") QueryBuilder builder);
 
 }

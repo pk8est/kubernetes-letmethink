@@ -2,12 +2,13 @@ package com.pkest.web.service.service;
 
 import com.pkest.common.bean.PageInfo;
 import com.pkest.common.exception.HYException;
-import com.pkest.lib.myibatis.CompareBuilder;
+import com.pkest.lib.myibatis.QueryBuilder;
 import com.pkest.repo.mapper.BaseMapper;
 import com.pkest.repo.model.BaseModel;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -16,6 +17,12 @@ import java.util.Optional;
  * Email: pk8est@qq.com
  */
 public interface BaseService<T extends BaseModel, K extends BaseMapper>{
+
+    Class<T> getModelClass();
+
+    Map<String, String> getTableColumns();
+
+    String getTableColumn(String name);
 
     K getMapper();
 
@@ -29,19 +36,23 @@ public interface BaseService<T extends BaseModel, K extends BaseMapper>{
 
     Optional<T> GeFind(Long id, boolean deleteStatus);
 
-    Optional<T> GeFind(CompareBuilder compareBuilder);
+    Optional<T> GeFind(QueryBuilder builder);
 
-    Optional<T> GeFind(CompareBuilder compareBuilder, boolean filterDeleteStatus);
+    Optional<T> GeFind(QueryBuilder builder, boolean filterDeleteStatus);
 
-    List<T> GeFindAll(CompareBuilder compareBuilder);
+    List<T> GeFindAll(QueryBuilder builder);
 
-    List<T> GeFindAll(CompareBuilder compareBuilder, boolean filterDeleteStatus);
+    List<T> GeFindAll(QueryBuilder builder, boolean filterDeleteStatus);
 
     PageInfo<T> GePagination(Pageable pageable);
 
-    PageInfo<T> GePagination(CompareBuilder compareBuilder, Pageable pageable);
+    PageInfo<T> GePagination(QueryBuilder builder, Pageable pageable);
 
-    PageInfo<T> GePagination(CompareBuilder compareBuilder, Pageable pageable, boolean filterDeleteStatus);
+    PageInfo<T> GePagination(QueryBuilder builder, Pageable pageable, boolean filterDeleteStatus);
+
+    PageInfo<T> GePagination(QueryBuilder builder, Pageable pageable, List<String> sortableFields);
+
+    PageInfo<T> GePagination(QueryBuilder builder, Pageable pageable, boolean filterDeleteStatus, List<String> sortableFields);
 
     Long GeCreate(BaseModel model);
 

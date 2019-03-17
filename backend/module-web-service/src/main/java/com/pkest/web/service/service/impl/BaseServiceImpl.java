@@ -7,7 +7,9 @@ import com.pkest.common.exception.HYException;
 import com.pkest.common.exception.RecordNotFoundException;
 import com.pkest.lib.myibatis.CompareBuilder;
 import com.pkest.lib.myibatis.HYMybatisReflectUtil;
+import com.pkest.lib.myibatis.QueryBuilder;
 import com.pkest.lib.myibatis.annotation.HYColumn;
+import com.pkest.lib.myibatis.enums.QueryOperator;
 import com.pkest.repo.mapper.BaseMapper;
 import com.pkest.repo.model.BaseModel;
 import com.pkest.util.HYPropertyUtils;
@@ -21,6 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by wuzhonggui on 2018/11/27.
@@ -41,10 +44,12 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
         this.mapper = mapper;
     }
 
+    @Override
     public Class<T> getModelClass(){
         return (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
+    @Override
     public Map<String, String> getTableColumns(){
         if(tableColumnMaps == null){
             synchronized (this){
@@ -65,6 +70,7 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
         return this.tableColumnMaps;
     }
 
+    @Override
     public String getTableColumn(String name){
         if(getTableColumns().containsKey(name)){
             return getTableColumns().get(name);
@@ -105,25 +111,25 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
     }
 
     @Override
-    public Optional<T> GeFind(CompareBuilder compareBuilder){
-        return GeFind(compareBuilder, true);
+    public Optional<T> GeFind(QueryBuilder builder){
+        return GeFind(builder, true);
     }
 
     @Override
-    public Optional<T> GeFind(CompareBuilder compareBuilder, boolean filterDeleteStatus){
-        if(filterDeleteStatus) compareBuilder.filter(getTableColumn(DELETE_FIELD_KEY), 0);
-        return Optional.ofNullable((T)getMapper().findOne(compareBuilder));
+    public Optional<T> GeFind(QueryBuilder builder, boolean filterDeleteStatus){
+        if(filterDeleteStatus) builder.filter(getTableColumn(DELETE_FIELD_KEY), 0);
+        return Optional.ofNullable((T)getMapper().findOne(builder));
     }
 
     @Override
-    public List<T> GeFindAll(CompareBuilder compareBuilder){
-        return GeFindAll(compareBuilder, true);
+    public List<T> GeFindAll(QueryBuilder builder){
+        return GeFindAll(builder, true);
     }
 
     @Override
-    public List<T> GeFindAll(CompareBuilder compareBuilder, boolean filterDeleteStatus){
-        if(filterDeleteStatus) compareBuilder.filter(getTableColumn(DELETE_FIELD_KEY), 0);
-        return getMapper().findAll(compareBuilder);
+    public List<T> GeFindAll(QueryBuilder builder, boolean filterDeleteStatus){
+        if(filterDeleteStatus) builder.filter(getTableColumn(DELETE_FIELD_KEY), 0);
+        return getMapper().findAll(builder);
     }
 
     @Override
@@ -132,15 +138,31 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
     }
 
     @Override
-    public PageInfo<T> GePagination(CompareBuilder builder, Pageable pageable){
+    public PageInfo<T> GePagination(QueryBuilder builder, Pageable pageable){
         return GePagination(builder, pageable, true);
     }
 
     @Override
-    public PageInfo<T> GePagination(CompareBuilder builder, Pageable pageable, boolean filterDeleteStatus){
+    public PageInfo<T> GePagination(QueryBuilder builder, Pageable pageable, boolean filterDeleteStatus){
+        return GePagination(builder, pageable, filterDeleteStatus, null);
+    }
+
+    @Override
+    public PageInfo<T> GePagination(QueryBuilder builder, Pageable pageable, List<String> sortableFields){
+        return GePagination(builder, pageable, true, sortableFields);
+    }
+
+    @Override
+    public PageInfo<T> GePagination(QueryBuilder builder, Pageable pageable, boolean filterDeleteStatus, List<String> sortableFields){
         if(filterDeleteStatus) builder.filter(HYStringUtils.toUnderline(DELETE_FIELD_KEY), 0);
         PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize(), true);
-        builder.setSortable(pageable.getSort(), getTableColumns());
+        if(sortableFields == null){
+            builder.setSortable(pageable.getSort(), getTableColumns());
+        }else{
+            builder.setSortable(pageable.getSort(), getTableColumns().entrySet().stream()
+                    .filter(e -> sortableFields.contains(e.getKey()))
+                    .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue())));
+        }
         return new PageInfo(getMapper().findAll(builder));
     }
 
@@ -196,7 +218,7 @@ public class BaseServiceImpl<T extends BaseModel, K extends BaseMapper> implemen
         for (String field: fields){
             builder.filter(HYStringUtils.toUnderline(field), HYPropertyUtils.getProperty(model, HYStringUtils.toCamel(field), ""));
         }
-        builder.compare(id, CompareBuilder.OperatorEnum.NEQ, HYPropertyUtils.getProperty(model, id, 0));
+        builder.compare(id, QueryOperator.NEQ, HYPropertyUtils.getProperty(model, id, 0));
         return GeFind(builder, filterDeleteStatus).orElse(null) == null ? true : false;
     }
 
