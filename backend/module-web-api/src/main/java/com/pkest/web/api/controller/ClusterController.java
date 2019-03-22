@@ -51,6 +51,8 @@ public class ClusterController extends BaseController<ClusterService> {
         return ResultCode.SUCCESS.wrap(getService().GePagination(builder, pageable));
     }
 
+
+
     @ResponseBody
     @PostMapping("/create")
     @ApiOperation(value="创建")

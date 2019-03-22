@@ -27,5 +27,11 @@ export default {
       method: 'put',
       data
     })
+  },
+  delete(id) {
+    return axios.request({
+      url: MODULE_NAME + '/delete/' + id,
+      method: 'delete'
+    })
   }
 }

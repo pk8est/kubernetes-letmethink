@@ -138,4 +138,5 @@ public interface QueryBuilder {
     CompareBuilder addFieldCondition(String field, QueryOperator operator, String value, Boolean and);
 
     CompareBuilder.CompareField getCompareField(String field, QueryOperator operator, Boolean and, QueryFieldValueType type, Boolean isStatement);
+
 }

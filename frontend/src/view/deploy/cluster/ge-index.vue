@@ -220,7 +220,7 @@ export default {
               <div>
                 <Button size="small" style="margin-right:5px" on-click={ () => this.viewHandler(row) }>查看</Button>
                 <Button size="small" style="margin-right:5px" on-click={ () => this.updateHandler(row) }>更新</Button>
-                <Button size="small" style="margin-right:5px" type="error">删除</Button>
+                <Button size="small" style="margin-right:5px" type="error" on-click={ () => this.deleteHandler(row) }>删除</Button>
               </div>
             )
           }
@@ -447,6 +447,20 @@ export default {
       this.modalFormTitle = "更新: [ " + (row.name || row.id) + " ]"
       this.initForm = row
       this.showModalForm = true
+    },
+    deleteHandler(row){
+      this.$Modal.confirm({
+          title: '删除',
+          content: '您确定要删除该记录吗?',
+          onOk: () => {
+              API.delete(row.id).then(({status, message}) => {
+                if(status == 0 && message){
+                  this.$Message.success(message)
+                  this.list()
+                }
+              })
+          }
+      });
     },
     modalCancel(){
       this.showModalForm = false
