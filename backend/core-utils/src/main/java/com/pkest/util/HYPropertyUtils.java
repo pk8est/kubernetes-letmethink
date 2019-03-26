@@ -2,6 +2,8 @@ package com.pkest.util;
 
 import org.springframework.beans.BeanUtils;
 
+import java.util.Map;
+
 /**
  * Created by wuzhonggui on 2019/1/22.
  * QQ: 2731429978
@@ -53,8 +55,19 @@ public class HYPropertyUtils {
 
     public static <T> T getProperty(Object object, String key, T defaultValue, boolean quiet){
         try {
-            T item = (T) BeanUtils.getPropertyDescriptor(object.getClass(), key).getReadMethod().invoke(object);
-            return item == null ? defaultValue : item;
+            if(object instanceof Map){
+                Map map = (Map) object;
+                if(map.containsKey(key)){
+                    return (T) map.get(key);
+                }else if(quiet){
+                    return defaultValue;
+                }else{
+                    throw new RuntimeException();
+                }
+            }else{
+                T item = (T) BeanUtils.getPropertyDescriptor(object.getClass(), key).getReadMethod().invoke(object);
+                return item == null ? defaultValue : item;
+            }
         }catch (Exception e){
             if(quiet){
                 return defaultValue;
