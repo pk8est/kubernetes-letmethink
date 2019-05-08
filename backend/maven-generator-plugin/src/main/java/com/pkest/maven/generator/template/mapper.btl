@@ -1,0 +1,13 @@
+package com.pkest.repo.mapper;
+
+import com.pkest.repo.model.${data.modelName}Model;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ${data.modelName}Mapper extends BaseMapper<${data.modelName}Model, Long> {
+
+}
+
+
+
+

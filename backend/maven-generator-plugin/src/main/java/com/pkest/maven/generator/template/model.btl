@@ -1,0 +1,22 @@
+package com.pkest.repo.model;
+
+import lombok.Data;
+import java.util.Date;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import com.pkest.lib.myibatis.annotation.HYTable;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@HYTable("${data.table}")
+public class ${data.modelName}Model extends BaseModel {
+
+    <% for(property in properties){ %>
+    private ${property.type} ${property.name};
+    <% } %>
+
+}
+
+
+

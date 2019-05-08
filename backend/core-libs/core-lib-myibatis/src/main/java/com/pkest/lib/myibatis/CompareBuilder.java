@@ -120,6 +120,22 @@ public class CompareBuilder extends LinkedHashMap<CompareBuilder.CompareField, O
         return new CompareBuilder();
     }
 
+    public static CompareBuilder builder(String field1, Object value1){
+        return new CompareBuilder(field1, value1);
+    }
+
+    public static CompareBuilder builder(String field1, Object value1, String field2, Object value2){
+        return builder(field1, value1).filter(field2, value2);
+    }
+
+    public static CompareBuilder builder(String field1, Object value1, String field2, Object value2, String field3, Object value3){
+        return builder(field1, value1, field2, value2).filter(field3, value3);
+    }
+
+    public static CompareBuilder builder(String field1, Object value1, String field2, Object value2, String field3, Object value3, String field4, Object value4){
+        return builder(field1, value1, field2, value2, field3, value3).filter(field4, value4);
+    }
+
     public CompareBuilder(){
         addCondition("1=1");
     }
@@ -172,7 +188,7 @@ public class CompareBuilder extends LinkedHashMap<CompareBuilder.CompareField, O
     }
 
     public CompareBuilder(String field, List value){
-        in(field, value);
+        in(field, value, true, false);
     }
 
     @Override
