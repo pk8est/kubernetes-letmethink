@@ -21,6 +21,12 @@ public interface HYBaseRepository<T, K> {
     K insert(T model);
 
     @Lang(HYLanguageDriver.class)
+    @Insert({"<script>", "REPLACE INTO @{table}(@{insertField}) VALUES (@{insertValue})", "</script>"})
+    @Options(useGeneratedKeys=true)
+    @AutoKeyProperty()
+    K replace(T model);
+
+    @Lang(HYLanguageDriver.class)
     @Insert({"<script>", "INSERT INTO @{table}(@{batchInsertField}) VALUES @{batchInsertValue}", "</script>"})
     K batchInsert(@Param("list") List<T> list);
 
